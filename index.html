@@ -1,0 +1,469 @@
+<!doctype html>
+<html lang="pt-BR"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Arena+ | Performance</title><meta name="theme-color" content="#101014"><meta name="description" content="Arena+: treine, acompanhe sua evolução e registre atividades de corrida, futebol, futsal e vôlei."><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="Arena+"><link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{color-scheme:dark;--bg:#0a0a0a;--card:#151515;--line:#262626;--tx:#fff;--mu:#9a9a9a;--g:#f52238;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px)}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;background:var(--bg);color:var(--tx);font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+#app{max-width:480px;margin:0 auto;padding:16px 16px 110px}
+h1{font-size:26px;margin:0 0 4px}h2{font-size:16px;margin:22px 0 10px}
+.mu{color:var(--mu);font-size:13px}.g{color:var(--g)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:14px;margin-bottom:10px;animation:in .3s ease}
+@keyframes in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.row{display:flex;gap:10px;align-items:center}.row>*{flex:1}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.big{font-size:30px;font-weight:800;letter-spacing:-.5px}
+.btn{display:block;width:100%;border:0;border-radius:16px;padding:16px;font-size:16px;font-weight:800;background:var(--g);color:#000;cursor:pointer;transition:transform .1s}
+.btn:active{transform:scale(.97)}.btn.alt{background:#222;color:#fff}.btn.red{background:#da2539;color:#fff}
+.sp{display:flex;align-items:center;gap:14px;cursor:pointer}.sp b{font-size:18px}.ico{font-size:34px;width:56px;height:56px;display:grid;place-items:center;background:#341217;border-radius:16px}
+.av{width:52px;height:52px;border-radius:50%;background:var(--g);color:#000;display:grid;place-items:center;font-weight:800;font-size:22px;flex:none}
+input{width:100%;background:#0d0d0d;border:1px solid var(--line);color:#fff;border-radius:12px;padding:12px;font-size:16px;margin:4px 0 10px}
+nav{position:fixed;left:0;right:0;bottom:0;background:rgba(10,10,10,.95);border-top:1px solid var(--line);display:flex;padding:8px 4px calc(8px + env(safe-area-inset-bottom,0px));backdrop-filter:blur(12px);z-index:5}
+nav button{flex:1;background:none;border:0;color:var(--mu);font-size:11px;padding:4px;cursor:pointer}nav button span{display:block;font-size:22px}nav button.on{color:var(--g)}
+.bars{display:flex;gap:6px;align-items:flex-end;height:80px}.bars div{flex:1;background:var(--g);border-radius:6px 6px 0 0;min-height:3px;transition:height .4s}
+.cal{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}.cal i{aspect-ratio:1;border-radius:8px;background:#1c1c1c;font-style:normal;font-size:11px;display:grid;place-items:center;color:var(--mu)}.cal i.on{background:var(--g);color:#000;font-weight:800}
+.sc{display:flex;align-items:center;justify-content:space-between;gap:6px;text-align:center}.sc .n{font-size:54px;font-weight:800}.sc button{width:48px;height:48px;border-radius:50%;border:0;background:#222;color:#fff;font-size:24px}.sc button.p{background:var(--g);color:#000}
+.back{background:none;border:0;color:var(--g);font-size:15px;padding:0 0 10px;cursor:pointer}
+.tag{display:inline-block;font-size:11px;background:#341217;color:var(--g);border-radius:8px;padding:2px 8px;font-weight:700}
+.pg{height:8px;background:#222;border-radius:8px;overflow:hidden}.pg div{height:100%;background:var(--g)}
+table{width:100%;border-collapse:collapse;font-size:14px}td,th{padding:6px 4px;text-align:center}td:first-child,th:first-child{text-align:left}th{color:var(--mu);font-weight:500}
+svg{width:100%;display:block}
+body{font-family:Outfit,-apple-system,"Segoe UI",Roboto,sans-serif;background:radial-gradient(120% 60% at 50% -10%,#2a1018 0,#0a0a0a 55%) fixed #050505}
+:root{--card:#141414;--line:#232323}
+#main{animation:in .28s ease}
+#splash{position:fixed;inset:0;background:#000;z-index:99;display:grid;place-items:center;animation:fo .5s .7s forwards;pointer-events:none}.logo{font-size:44px;font-weight:800;letter-spacing:6px;animation:pl 1s ease}.logo span{color:var(--g)}@keyframes pl{from{opacity:0;transform:scale(.9)}}@keyframes fo{to{opacity:0;visibility:hidden}}
+h1{font-weight:800;letter-spacing:-.5px}h2{font-size:12px;text-transform:uppercase;letter-spacing:1.6px;color:var(--mu);font-weight:600;margin:26px 0 10px}
+.card{box-shadow:0 8px 24px rgba(0,0,0,.35);background:linear-gradient(180deg,#171717,#121212)}#live .card{animation:none}
+.btn{display:flex;gap:8px;align-items:center;justify-content:center;box-shadow:0 8px 24px rgba(245,34,56,.25)}.btn.alt{box-shadow:none;border:1px solid var(--line);background:#161616}.btn.red{box-shadow:none}.bi svg{width:22px;height:22px}
+nav{background:rgba(8,8,8,.85);box-shadow:0 -10px 30px rgba(0,0,0,.5)}nav button{display:flex;flex-direction:column;align-items:center;gap:3px;min-height:52px;transition:color .2s,transform .2s}nav button.on{transform:translateY(-2px)}nav svg{width:24px;height:24px}nav button.on svg{filter:drop-shadow(0 0 6px rgba(245,34,56,.7))}nav button span{display:flex}
+.av{object-fit:cover}.hd{display:flex;align-items:center;gap:12px}.hd h1{margin:0}
+.hero{display:flex;align-items:center;gap:18px;padding:18px;border-radius:24px;margin:16px 0 12px;background:linear-gradient(135deg,#54131f,#0a0a0a 70%);border:1px solid #68202c;box-shadow:0 16px 40px rgba(245,34,56,.12)}.hero small{font-size:16px;color:var(--mu)}
+.ring{position:relative;width:96px;height:96px;flex:none}.ring svg{width:96px;height:96px;transform:rotate(-90deg)}.ring circle{fill:none;stroke-width:8;stroke-linecap:round}.rb{stroke:#332127}.rf{stroke:var(--g);animation:rg 1s ease-out}.ring b{position:absolute;inset:0;display:grid;place-items:center;font-size:18px}@keyframes rg{from{stroke-dasharray:0 226}}
+.bars div{background:linear-gradient(180deg,var(--g),#ae1529);transform-origin:bottom;animation:gr .6s ease-out}@keyframes gr{from{transform:scaleY(0)}}.pg div{transform-origin:left;animation:sx .8s ease-out}@keyframes sx{from{transform:scaleX(0)}}
+.sp{position:relative;overflow:hidden;transition:transform .2s,border-color .2s}.sp:active{transform:scale(.96)}.sp:hover{border-color:var(--g)}
+.si{display:grid;place-items:center;width:44px;height:44px;border-radius:14px;background:rgba(245,34,56,.12);color:var(--g)}.si svg,.ico svg{width:26px;height:26px}.sp.big{padding:18px}.ico{background:rgba(245,34,56,.12)!important;color:var(--g)}
+.s-run{background:linear-gradient(120deg,transparent 55%,rgba(245,34,56,.14) 56%,transparent 58%),linear-gradient(180deg,#171717,#121212)}
+.s-fut{background:repeating-linear-gradient(90deg,rgba(245,34,56,.08) 0 28px,transparent 28px 56px),#121212}
+.s-fsl{background:radial-gradient(circle at 100% 100%,transparent 38px,rgba(255,255,255,.1) 39px 41px,transparent 42px),#121212}
+.s-vol{background:repeating-linear-gradient(0deg,rgba(255,255,255,.05) 0 1px,transparent 1px 14px),#121212}
+.ph{display:flex;align-items:center;gap:14px;padding:16px;border-radius:22px;margin-bottom:14px;border:1px solid var(--line)}.ph h1{margin:0}
+.empty{display:flex;flex-direction:column;align-items:center;gap:4px;padding:26px 16px;border:1px dashed #2a2a2a;border-radius:18px;text-align:center;color:var(--mu);margin-bottom:10px;font-size:13px}.empty::before{content:"";width:44px;height:44px;border-radius:50%;border:2px solid var(--g);opacity:.5;margin-bottom:8px;box-shadow:0 0 20px rgba(245,34,56,.3)}.empty b{color:#fff;font-size:15px}
+.pcard{text-align:center;padding:22px 16px;border-radius:26px;background:linear-gradient(160deg,#54131f,#0c0c0c 60%);border:1px solid #68202c;box-shadow:0 16px 40px rgba(245,34,56,.12);animation:in .3s}.pcard h1{margin:10px 0 2px}
+.avu{position:relative;display:inline-block;cursor:pointer}.avu .av{width:96px;height:96px;font-size:40px;border:3px solid var(--g);box-shadow:0 0 24px rgba(245,34,56,.4)}.avu i{position:absolute;right:0;bottom:0;background:#fff;color:#000;width:28px;height:28px;border-radius:50%;display:grid;place-items:center;font-style:normal}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:16px}.grid3 b{display:block;font-size:26px;color:var(--g)}.grid3 span{font-size:12px;color:var(--mu)}
+.medals{display:grid;grid-template-columns:1fr 1fr;gap:10px}.medals div{padding:12px;border-radius:16px;background:#121212;border:1px solid var(--line);font-size:13px;color:var(--mu)}.medals div.on{color:#fff;border-color:var(--g);box-shadow:0 0 16px rgba(245,34,56,.15)}.medals span{display:block;font-size:20px;color:var(--g)}
+.sc button{transition:transform .1s}.sc button:active{transform:scale(.88)}.sc button.p{box-shadow:0 0 18px rgba(245,34,56,.4)}.sc .n{font-variant-numeric:tabular-nums}
+.toast{position:fixed;left:50%;bottom:calc(90px + env(safe-area-inset-bottom,0px));background:var(--g);color:#000;font-weight:800;padding:12px 20px;border-radius:30px;z-index:20;box-shadow:0 8px 30px rgba(245,34,56,.4);animation:ti .3s,fo .4s 1.8s forwards}@keyframes ti{from{opacity:0;transform:translate(-50%,10px)}to{opacity:1;transform:translateX(-50%)}}.toast{transform:translateX(-50%)}
+@media(prefers-reduced-motion:reduce){*:not(#splash){animation:none!important;transition:none!important}#splash{display:none}}
+select,textarea{width:100%;background:#0d0d0d;border:1px solid var(--line);color:#fff;border-radius:12px;padding:12px;font-size:16px;margin:4px 0 10px;font-family:inherit}textarea{font-size:13px}
+.up{display:block;padding:12px;border:1px dashed #333;border-radius:12px;margin-bottom:10px;text-align:center;color:var(--mu);cursor:pointer}
+.pr{display:flex;gap:10px;align-items:center;margin-top:10px}.pi{flex:1;min-width:0}.av.sm{width:38px;height:38px;font-size:16px;flex:none}
+.mb{flex:none;border:1px solid var(--line);background:#1a1a1a;color:#fff;border-radius:10px;min-width:40px;height:40px;padding:0 10px;font-size:13px;cursor:pointer}
+.tm{margin-top:12px;padding-top:12px;border-top:1px solid var(--line)}.th{display:flex;justify-content:space-between;align-items:center}
+.evs{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0 4px 2px}.eb{border:1px solid #68202c;background:#341217;color:var(--g);border-radius:10px;padding:8px 12px;font-size:13px;min-height:38px;cursor:pointer}.eb.u{background:#1a1a1a;border-color:var(--line);color:var(--mu)}.ck{width:20px;height:20px;padding:0;margin:0 6px 0 0;vertical-align:middle;accent-color:#f52238}
+.ad>.btn{flex:none;width:auto;padding:12px 18px}.btn.sm{padding:11px;font-size:14px;border-radius:12px}
+.err{color:#ff8080;margin-top:8px}.warn{margin-top:8px;padding:10px;border-radius:12px;background:#2a2108;border:1px solid #6b5a14;color:#ffd666;font-size:13px}
+.chips{display:flex;gap:8px;overflow-x:auto;margin-bottom:12px;padding-bottom:4px}.chips button{flex:none;border:1px solid var(--line);background:#161616;color:var(--mu);border-radius:20px;padding:8px 14px;font-size:13px;cursor:pointer}.chips button.on{background:var(--g);color:#000;border-color:var(--g);font-weight:800}
+.tag.man{background:#222;color:var(--mu)}.wl{display:flex;gap:6px;margin-top:4px}.wl span{flex:1;text-align:center;font-size:11px;color:var(--mu)}
+
+/* ARENA+ 2.0 — identidade rubi / noite */
+:root { --bg:#09090d;--card:#16161d;--line:#303039;--tx:#f9f9fa;--mu:#a5a4b0;--g:#f52238; --red-deep:#b80f2a; color-scheme:dark; }
+html { scroll-behavior:smooth; }
+body { background:radial-gradient(ellipse 90% 340px at 50% 0%,rgba(143,19,41,.30),transparent 80%),linear-gradient(180deg,#101015 0%,#09090d 45%,#08080c 100%) fixed;min-height:100vh;letter-spacing:-.01em; }
+#app { padding:20px 18px calc(130px + env(safe-area-inset-bottom,0px)); }
+#main { max-width:480px;margin:0 auto; }
+h1 { font-size:30px;font-weight:800;letter-spacing:-1px;line-height:1.14; }
+h2 { color:#b7b6be;letter-spacing:1.8px;font-size:11px;margin:27px 0 12px; }
+.mu {color:var(--mu);line-height:1.45}
+.card {background:linear-gradient(152deg,rgba(31,31,40,.92),rgba(20,20,27,.95));border:1px solid rgba(255,255,255,.065);border-radius:20px;padding:17px;margin-bottom:12px;box-shadow:0 12px 32px rgba(0,0,0,.14)}
+.grid{gap:10px}.grid>.card .big{font-size:27px}.grid>.card{min-width:0}
+.big {font-size:31px;letter-spacing:-.9px}.g{color:#ff3b50}
+.btn {color:#fff;background:linear-gradient(135deg,#ff3449,#d5122c);box-shadow:0 12px 28px rgba(218,18,46,.20);letter-spacing:.1px;border-radius:15px;min-height:51px;font-family:inherit}
+.btn:hover{filter:brightness(1.08)}.btn:focus-visible,.mb:focus-visible,.back:focus-visible,nav button:focus-visible,.chips button:focus-visible{outline:2px solid #ff5365;outline-offset:3px}
+.btn.alt{background:#22222b;border:1px solid #363640}.btn.red{background:#64212b;border:1px solid #ae3948;box-shadow:none}
+input,select,textarea {background:#111117;border:1px solid #36363f;color:#fff;border-radius:13px;min-height:45px;outline:none}
+input:focus,select:focus,textarea:focus{border-color:#fa4055;box-shadow:0 0 0 3px rgba(245,34,56,.12)}
+input[type=range]{accent-color:#f52238;min-height:25px}
+nav {left:50%;right:auto;transform:translateX(-50%);width:min(100%,520px);background:rgba(18,18,24,.94);border:1px solid rgba(255,255,255,.08);border-bottom:0;border-radius:22px 22px 0 0;box-shadow:0 -14px 48px rgba(0,0,0,.42);padding:9px 8px calc(10px + env(safe-area-inset-bottom,0px));}
+nav button {font-family:inherit;font-size:10px;font-weight:600;gap:5px;min-width:0;transition:color .15s;}
+nav button.on{color:#ff3d52;transform:none}
+nav button.on svg{filter:drop-shadow(0 0 8px rgba(245,34,56,.35))}
+nav button:nth-child(3) span{background:linear-gradient(135deg,#ff394c,#bd1229);border-radius:13px;padding:9px;margin-top:-18px;box-shadow:0 8px 20px rgba(245,34,56,.24);color:white}
+nav button:nth-child(3) span svg{width:25px;height:25px}
+nav button:nth-child(3){color:#fff}
+.hd{margin:14px 0 8px}.hd .av{height:48px;width:48px;border:2px solid rgba(245,34,56,.6)}.hd .mu{font-size:12px}
+.brandbar{display:flex;align-items:center;justify-content:space-between;margin:2px 0 28px;padding:4px 0}
+.brand-word{font-size:22px;font-weight:800;letter-spacing:2px}.brand-word span{color:#ff3b50}
+.brand-chip{padding:7px 10px;border:1px solid #47232d;border-radius:999px;background:#2c141b;color:#ff7887;font-size:10px;font-weight:700;letter-spacing:.8px}
+.hero{position:relative;overflow:hidden;background:linear-gradient(120deg,#3d0e1e,#21111a 52%,#141319);border:1px solid #64303d;border-radius:24px;box-shadow:0 16px 46px rgba(190,22,48,.12);padding:22px 18px;min-height:150px}
+.hero:after{content:"";pointer-events:none;position:absolute;width:190px;height:190px;right:-70px;top:-75px;border-radius:50%;border:32px solid rgba(245,34,56,.075)}
+.hero .big{font-size:36px;color:#fff}.hero .mu{color:#d6b6bf}.hero small{color:#d6b6bf}
+.ring{width:100px;height:100px}.ring svg{width:100px;height:100px}.ring b{color:#fff}
+.si,.ico{background:rgba(245,34,56,.11)!important;color:#ff3d52;border:1px solid rgba(245,34,56,.12)}
+.sp{border:1px solid rgba(255,255,255,.08);transition:transform .15s, border-color .15s}.sp:hover{border-color:#b83247}
+.sp.big{gap:18px}.sp.big .ico{flex:none;width:58px;height:58px;border-radius:18px}.sp.big b{font-size:20px;letter-spacing:-.3px}.sp.big>div:last-child{flex:1}
+.s-run{background:radial-gradient(circle at 100% 0,rgba(245,34,56,.18),transparent 45%),#18171f}
+.s-fut{background:repeating-linear-gradient(90deg,rgba(245,34,56,.045) 0 32px,transparent 32px 64px),#17171f}
+.s-fsl{background:radial-gradient(circle at 100% 100%,transparent 45px,rgba(245,34,56,.12) 46px 48px,transparent 49px),#19171e}
+.s-vol{background:repeating-linear-gradient(0deg,rgba(245,34,56,.05) 0 1px,transparent 1px 18px),#17171e}
+.ph{padding:19px;border:1px solid #3a2931;border-radius:22px}.ph h1{font-size:26px}
+.tag{background:#381821;color:#ff8794;border-radius:7px;padding:4px 8px}.tag.man{background:#2b2b34;color:#c5c5ce}
+.bars{height:96px;gap:9px}.bars div{background:linear-gradient(#fa4158,#952038);border-radius:7px 7px 2px 2px}
+.pg{background:#34323a;height:9px}.pg div{background:linear-gradient(90deg,#dd1731,#ff4f5f)}
+.cal i{border-radius:10px;background:#25242c}.cal i.on{background:#d62039;color:#fff}
+.pcard{background:radial-gradient(circle at 50% -25%,#732035,transparent 65%),#17151d;border-color:#593040}
+.avu .av{border-color:#f52238;box-shadow:0 0 28px rgba(245,34,56,.23)}
+.grid3 b,.medals span{color:#ff485b}.medals div.on{border-color:#be3044;box-shadow:0 0 18px rgba(245,34,56,.10)}
+.empty{background:#13131a;border-color:#39313a}.empty::before{border-color:#ef3045;box-shadow:0 0 20px rgba(245,34,56,.2)}
+.toast{background:#e52a40;color:#fff;box-shadow:0 8px 30px rgba(245,34,56,.25)}
+.chips button{background:#1d1d26;border-color:#35353e}.chips button.on{background:#df1e38;border-color:#df1e38;color:#fff}
+.ck{accent-color:#f52238}.eb{background:#381821;border-color:#7b2735;color:#ff99a3}
+.sc button.p{background:#d8223a;color:#fff;box-shadow:0 0 18px rgba(245,34,56,.4)}
+#splash{background:#0c0b10}.splash-inner{text-align:center}.splash-emblem{width:80px;height:80px;border-radius:24px;display:grid;place-items:center;margin:0 auto 26px;background:linear-gradient(135deg,#fd3046,#ab0f25);box-shadow:0 20px 55px rgba(245,34,56,.25);color:#fff;font-size:38px;font-weight:800}.splash-emblem span{font-size:25px}.logo{font-size:32px;letter-spacing:5px}.splash-tag{margin-top:12px;color:#b4adb5;letter-spacing:3px;font-size:10px}
+.chart-title{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}.chart-title .g{font-weight:700}
+#ctl{margin:12px 0}.gps-state{display:inline-flex;align-items:center;gap:8px;padding:7px 10px;border-radius:999px;background:#27202a;font-size:12px;color:#d9c6cd;margin:12px 0 3px}.gps-dot{width:7px;height:7px;border-radius:50%;background:#efb759}.gps-state.good .gps-dot{background:#65d39a}.gps-state.good{color:#d2eadc}
+.back{padding:10px 0 16px;min-height:40px}.record-strong{font-size:16px;font-weight:800}.privacy-note{font-size:12px;color:#aaa2ac;line-height:1.5}
+summary{cursor:pointer;font-weight:700}details.card > p{margin-bottom:0}
+@media(min-width:540px){#app{padding-top:32px}nav{border-radius:22px 22px 0 0}}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+
+/* Correção de responsividade nos formulários (28/10/2026) */
+html,body{width:100%;max-width:100%}
+#app,#main,.card,.ph,.pcard{min-width:0;max-width:100%}
+.row > *, .grid > *, .ph > *, .sp > * {min-width:0}
+.grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+input:not([type="checkbox"]),select,textarea{box-sizing:border-box;width:100%;max-width:100%;min-width:0}
+textarea{display:block;resize:vertical;min-height:104px;max-height:420px;overflow-x:hidden;overflow-y:auto;font-size:16px;line-height:1.45;overflow-wrap:anywhere}
+.card .btn{max-width:100%;min-width:0}
+.card p,.card .mu,.card b{overflow-wrap:anywhere}
+@media(max-width:359px){#app{padding-left:12px;padding-right:12px}.card{padding:14px}.row{gap:7px}.grid{gap:8px}.grid .mu{font-size:12px}}
+
+/* ARENA+ — Edição Performance | visual escuro inspirado na referência */
+:root {--bg:#08090d;--card:#14151b;--line:#282832;--tx:#f8f8fc;--mu:#a6a5b4;--g:#f42946;--hot:#ff624b;--purple:#9b326d;}
+body {background:radial-gradient(90% 290px at 50% -95px,rgba(147,25,62,.15),transparent),#08090d;}
+#app {max-width:480px;padding:22px 19px calc(123px + env(safe-area-inset-bottom,0px));}
+#main {width:100%;max-width:100%;}
+.card{border-radius:20px;background:linear-gradient(152deg,#171820 0%,#111218 100%);border:1px solid #252630;box-shadow:none;padding:18px;margin-bottom:11px;}
+h1{font-size:27px;letter-spacing:-.85px;line-height:1.12}
+h2 {font-size:11px;letter-spacing:2px;font-weight:700;color:#c2bfcc;margin:27px 0 12px;}
+h2:before{content:"//";display:inline-block;margin-right:10px;color:#f12b47;letter-spacing:0;font-weight:800}
+.mu{color:#aba9b8;line-height:1.5}
+.big{font-size:32px;font-weight:800;letter-spacing:-1.3px}
+.g{color:#ff5565}
+.btn{background:linear-gradient(110deg,#ff5943 0%,#f32142 53%,#bd1644 100%);border:1px solid rgba(255,119,119,.16);color:#fff;border-radius:15px;min-height:52px;box-shadow:0 8px 28px rgba(202,28,65,.17);font-size:15px;font-weight:800}
+.btn.alt{background:#1b1c24;border:1px solid #343541;color:#f8f8fc;box-shadow:none}
+.btn.red{background:#3d1927;border:1px solid #732a3d}
+.btn:active{transform:scale(.985)}
+.brandbar{margin:0 0 21px;align-items:center}.brand-word{font-size:22px;letter-spacing:2.4px}.brand-word span{color:#ff4152}
+.brand-chip{border:1px solid #382635;background:#1c131e;color:#ec869d;border-radius:9px;padding:7px 10px;font-size:9px;letter-spacing:1.2px}
+.hd{gap:13px;margin:0 0 15px}.hd h1{font-size:26px}.hd .av{background:linear-gradient(130deg,#fc464b,#bf1240);border:1px solid #ff5e71;color:#fff;width:48px;height:48px;box-shadow:0 6px 20px rgba(207,30,61,.18)}
+.week-panel{padding:16px 15px;margin-bottom:14px}
+.week-header{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px}
+.overline{font-size:10px;font-weight:800;letter-spacing:1.7px;text-transform:uppercase;color:#d5d1dc}
+.week-note{font-size:11px;color:#837f90}
+.week-strip{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px}
+.day-cell{min-width:0;text-align:center;padding:10px 1px 9px;border-radius:11px;background:#1c1d25;color:#89899b;position:relative;}
+.day-cell.today{background:linear-gradient(160deg,#ff624c,#da2046);color:#fff;box-shadow:0 5px 16px rgba(245,42,64,.18)}
+.day-cell.active:not(.today){background:#34212f;color:#ff8590}
+.day-cell span{display:block;font-size:10px;line-height:1.1}.day-cell b{display:block;font-size:14px;line-height:1.2;margin-top:5px}
+.day-cell i{position:absolute;bottom:3px;left:calc(50% - 2px);height:4px;width:4px;background:#fff;border-radius:100%}
+.feature-summary{display:grid;grid-template-columns:1.1fr .9fr;gap:10px;margin:0 0 12px}
+.feature-summary .card{margin:0;min-width:0;min-height:146px;padding:16px;overflow:hidden}
+.feature-summary .feature-main{background:radial-gradient(ellipse at 0 0,rgba(173,30,59,.18),transparent 78%),#17141b}
+.feature-number{font-size:35px;font-weight:800;letter-spacing:-1.5px;line-height:1.2;margin:12px 0 0;white-space:nowrap}
+.feature-number small{font-size:14px;letter-spacing:0;color:#aeaab8;margin-left:3px}
+.feature-label{font-size:11px;color:#b5b1be}
+.feature-mini{display:flex;align-items:center;justify-content:space-between;margin-top:12px;color:#fa6477;font-size:10px;font-weight:700}
+.round-progress{width:76px;height:76px;position:relative;margin:5px auto 0}.round-progress svg{width:76px;height:76px;transform:rotate(-90deg)}.round-progress circle{fill:none;stroke-width:8;stroke-linecap:round}.round-progress .r-bg{stroke:#312631}.round-progress .r-front{stroke:#ff4056}.round-progress b{position:absolute;inset:0;display:grid;place-items:center;font-weight:800;font-size:17px}
+.hero{background:radial-gradient(ellipse at 0 0,#4c1932,transparent 70%),#15151c;border:1px solid #502837;box-shadow:none;min-height:unset;border-radius:20px;margin:0 0 13px;padding:16px 18px}
+.hero:after{display:none}.hero .ring{width:72px;height:72px}.hero .ring svg{width:72px;height:72px}.hero .big{font-size:31px}
+.section-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:23px 0 11px}.section-head h2{margin:0}.section-head .mu{font-size:11px}
+.grid{gap:9px}.grid>.card{margin-bottom:0;min-width:0}
+.stat-grid .card{min-height:104px}.stat-grid .big{font-size:29px;margin-top:12px;line-height:1.03}
+.stat-card-header{display:flex;align-items:center;gap:7px}.tiny-mark{width:24px;height:24px;flex:none;border-radius:8px;background:rgba(246,43,75,.12);display:grid;place-items:center;color:#f74766}.tiny-mark svg{width:14px;height:14px}
+.chart-card{overflow:hidden}.chart-card .bars{height:85px;margin-top:18px}.chart-card .bars div{background:linear-gradient(180deg,#f83b59,#622038);border-radius:7px 7px 1px 1px}
+.chart-card .wl{margin-top:10px}.chart-card .wl span{font-size:10px}
+.chart-empty{min-height:118px;display:grid;place-items:center;text-align:center;color:#9693a4;font-size:12px;line-height:1.6;border-top:1px dashed #282532;border-bottom:1px dashed #282532;margin:12px 0 5px;padding:16px}.spark svg{display:block;width:100%}.spark .spark-grid{stroke:#2b2532;stroke-width:1;stroke-dasharray:3 5}.spark .spark-line{stroke:#ff4364;stroke-width:3.2;fill:none;stroke-linecap:round;stroke-linejoin:round}.spark .spark-area{fill:rgba(238,47,89,.09)}
+.section-sports{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+.section-sports .sport-tile{display:flex;flex-direction:column;gap:12px;min-height:137px;position:relative;margin:0;padding:16px;overflow:hidden;justify-content:space-between;border:1px solid #2a2630}
+.section-sports .sport-tile:after{content:"";position:absolute;width:118px;height:118px;border:1px solid rgba(245,52,80,.12);border-radius:50%;top:-64px;right:-55px}
+.sport-tile .si{height:44px;width:44px;border-radius:14px;flex:none;background:#30202c!important;border-color:#472c38}.sport-tile .si svg{width:24px;height:24px}
+.sport-tile b{font-size:18px;letter-spacing:-.4px}.sport-tile .mu{font-size:11px;line-height:1.25}
+.sport-tile .sport-bottom{display:flex;align-items:end;justify-content:space-between;gap:8px}.sport-tile .sport-arrow{font-size:22px;line-height:1;color:#ff6177;flex:none}
+.sp.big{margin-bottom:10px;border-radius:20px;padding:17px 16px}.sp.big .ico{width:54px;height:54px;border-radius:16px}.sp.big b{font-size:19px}
+.s-run{background:radial-gradient(circle at 90% 0,rgba(240,40,78,.17),transparent 50%),#17161f}
+.s-fut{background:repeating-linear-gradient(90deg,rgba(240,54,76,.035) 0 32px,transparent 32px 64px),#15161e}
+.s-fsl{background:radial-gradient(circle at 100% 100%,transparent 42px,rgba(240,54,76,.14) 43px 45px,transparent 46px),#17151d}
+.s-vol{background:repeating-linear-gradient(0deg,rgba(240,54,76,.045) 0 1px,transparent 1px 16px),#17161e}
+.activity-row{display:flex;align-items:center;gap:12px}.activity-row .feedicon{height:40px;width:40px;flex:none;border-radius:12px;display:grid;place-items:center;background:#32212d;color:#ff536b}.feedicon svg{width:22px;height:22px}.activity-row .activity-info{min-width:0;flex:1}.activity-row .activity-title{font-weight:700;font-size:14px}.activity-row .mu{font-size:11px}.activity-row .feed-arrow{font-size:20px;color:#a39da9}
+.cal{gap:6px}.cal i{background:#22212a;border-radius:10px;font-size:12px}.cal i.on{background:linear-gradient(140deg,#f74152,#c71547)}
+#ctl{position:sticky;top:9px;z-index:4;background:rgba(9,9,15,.94);padding:7px;border:1px solid #282530;border-radius:20px;backdrop-filter:blur(14px);margin:13px 0;}nav{background:rgba(15,15,21,.97);width:min(100%,480px);padding:11px 8px calc(10px + env(safe-area-inset-bottom,0px));border:1px solid #2b2831;border-bottom:0;box-shadow:0 -20px 40px rgba(0,0,0,.55);}
+nav button{font-size:10px;gap:5px;color:#9693a2;min-height:53px}nav button.on{color:#ff5266}nav svg{width:21px;height:21px}nav button:nth-child(3) span{width:43px;height:43px;margin-top:-22px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(130deg,#ff624a,#ea2149);border:4px solid #111118;padding:8px;box-shadow:0 6px 20px rgba(231,42,69,.28)}
+nav button:nth-child(3) span svg{width:24px;height:24px}
+.ph{border-radius:20px;background-color:#16151d;margin-top:4px;padding:18px}.ph h1{font-size:25px}
+.page-kicker{font-size:10px;font-weight:800;letter-spacing:2px;color:#ff6978;text-transform:uppercase;margin-bottom:7px}
+.page-lead{font-size:12px;color:#aaa9b7;line-height:1.6;margin-top:8px;margin-bottom:22px}
+.pcard{background:radial-gradient(ellipse at 50% -10%,#542038,transparent 70%),#15151d;border:1px solid #463041;box-shadow:none;padding:28px 17px 22px}
+.avu .av{border:3px solid #ec3d58;box-shadow:0 0 0 6px rgba(234,48,80,.08)}.grid3{border-top:1px solid #34303d;padding-top:18px}.grid3 b{font-size:24px;color:#ff5a70}
+.medals div{background:#16171e;border-color:#292a36}.medals div.on{border-color:#74354a}
+#live>.card{background:linear-gradient(165deg,#17151d,#0f1016);border:1px solid #302633;padding:16px 16px 20px}
+.race-head{text-align:center;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#cac5d0;margin:17px 0 3px}
+.race-time{text-align:center;font-size:clamp(42px,13vw,66px);font-weight:800;letter-spacing:2px;font-variant-numeric:tabular-nums;line-height:1.3;background:linear-gradient(95deg,#9d3278,#f43c62,#ff744e);background-clip:text;-webkit-background-clip:text;color:transparent;margin:1px 0 13px}
+.race-metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;margin:8px 0 15px}
+.race-metric{border:1px solid #2c2933;border-radius:12px;padding:12px 4px;text-align:center;background:#15151d;min-width:0}
+.race-metric .mu{font-size:9px;letter-spacing:.7px;text-transform:uppercase}.race-metric b{display:block;font-size:18px;font-weight:800;margin-top:4px;white-space:nowrap;letter-spacing:-.5px}.race-metric small{font-size:10px;color:#a6a3b0}
+.route-frame{background:repeating-linear-gradient(0deg,rgba(255,255,255,.015) 0 1px,transparent 1px 25px),repeating-linear-gradient(90deg,rgba(255,255,255,.015) 0 1px,transparent 1px 25px),#101017;border:1px solid #252631;border-radius:17px;overflow:hidden;padding:4px;}
+.route-frame svg{width:100%;height:auto;max-height:252px}
+.race-footer{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:13px 0 0}.race-footer .mu{font-size:11px}.race-footer b{font-size:16px}
+.gps-state{margin:0 0 8px;background:#241e2a;color:#cbc2d1}
+#ctl{margin:14px 0 18px}
+#ctl .btn{min-height:59px;border-radius:18px}
+#ctl .btn.red{background:#3e1824;border-color:#752f42}
+#ctl .row{gap:10px}
+.form-intro{margin-bottom:15px}.form-group-label{display:block;color:#d1cbd7;font-size:12px;font-weight:600;margin:11px 0 4px}
+input,select,textarea{font-family:inherit;width:100%;max-width:100%;border:1px solid #32303e;background:#101118;border-radius:12px;color:#fff;padding:12px 13px;min-width:0}
+input,select{min-height:46px}textarea{min-height:104px;max-height:400px;resize:vertical;overflow-x:hidden;overflow-y:auto;display:block;max-width:100%;box-sizing:border-box;overflow-wrap:anywhere;word-break:break-word}
+input:focus,select:focus,textarea:focus{border-color:#f04d67;box-shadow:0 0 0 3px rgba(235,45,72,.13)}
+input[type=range]{accent-color:#ff4359}
+.card,.row,.grid,.ph,.pcard,#main{min-width:0}.row>*,.grid>*,.ph>*,.sp>*{min-width:0}
+.row{gap:10px}.grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+.card .btn{max-width:100%}.card b,.card p,.card .mu{overflow-wrap:anywhere}
+.up{overflow-wrap:anywhere}
+.chips{scrollbar-width:none}.chips button.on{background:linear-gradient(130deg,#f44150,#cf1742);border-color:#ef3a52}
+.empty{background:#13141b;border-color:#38303b}
+@media(max-width:365px){#app{padding-left:12px;padding-right:12px}.card{padding:13px}.feature-number{font-size:29px}.race-metric b{font-size:15px}.day-cell b{font-size:12px}.day-cell span{font-size:9px}.section-sports .sport-tile{padding:13px}.btn{font-size:14px}}
+@media(min-width:540px){#app{padding-top:27px}}
+</style></head><body>
+<div id="splash"><div class="splash-inner"><div class="splash-emblem">A<span>+</span></div><div class="logo">ARENA<span>+</span></div><div class="splash-tag">SEU ESPORTE. SUA EVOLUÇÃO.</div></div></div><div id="app"><div id="main"></div></div>
+<nav id="nav"></nav>
+<script>
+const $=s=>document.querySelector(s);
+const SP={run:{n:"Corrida",i:"🏃"},fut:{n:"Futebol",i:"⚽"},fsl:{n:"Futsal",i:"🥅"},vol:{n:"Vôlei",i:"🏐"}};
+let S={name:"Atleta",goal:10,runs:[],matches:[]};
+try{S=Object.assign(S,JSON.parse(localStorage.getItem("arena")||"{}"))}catch(e){}
+const save=()=>{try{localStorage.setItem("arena",JSON.stringify(S));return true}catch(e){return false}};
+S.teams=S.teams||[];S.players=S.players||[];S.sess=S.sess||[];S.goals=S.goals||[];S.pos=S.pos||{};S.matches.forEach((m,i)=>{m.id=m.id||Date.now()+i;m.ev=m.ev||[];m.pl=m.pl||[]});save();
+try{navigator.storage&&navigator.storage.persist&&navigator.storage.persist()}catch(e){}
+let tab="home",sub=null,R=null,M=null,tm=null;
+const sv=p=>`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${p}</svg>`;
+const IC={home:sv('<path d="M3 11l9-8 9 8v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/>'),sports:sv('<path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0zM7 6H4v1a3 3 0 0 0 3 3M17 6h3v1a3 3 0 0 1-3 3"/>'),act:sv('<circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/>'),com:sv('<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0M16 4.5a3.5 3.5 0 0 1 0 7M18 14a6 6 0 0 1 3.5 6"/>'),prof:sv('<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>'),run:sv('<path d="M12 21s7-6.2 7-11a7 7 0 0 0-14 0c0 4.8 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/>'),fut:sv('<circle cx="12" cy="12" r="9"/><path d="M12 8l3.5 2.5-1.3 4h-4.4l-1.3-4zM12 3v5M20.5 9.5l-5-1M17.5 19l-3.3-4.5M6.5 19l3.3-4.5M3.5 9.5l5-1"/>'),fsl:sv('<circle cx="12" cy="12" r="9"/><path d="M5 5.5c4 2 10 2 14 0M5 18.5c4-2 10-2 14 0M12 3c-3 4-3 14 0 18M12 3c3 4 3 14 0 18"/>'),vol:sv('<circle cx="12" cy="12" r="9"/><path d="M12 3c0 5 3 8 8.5 9M12 3c-4 1-6 4-6 8M3.5 12c5 0 8 2 9 8.5M20 15c-4 0-7-1-8-4"/>')};
+const POS={fut:["Goleiro","Zagueiro","Lateral","Meia","Atacante"],fsl:["Goleiro","Fixo","Ala","Pivô"],vol:["Levantador","Ponteiro","Oposto","Central","Líbero"]};
+let P=null,xc="",PI=null;
+const rr=()=>render(),uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,6),cl=s=>String(s==null?"":s).replace(/[<>&"'`]/g,"").trim().slice(0,40),esc=s=>String(s).replace(/[&<>"']/g,c=>"&#"+c.charCodeAt(0)+";"),pl_=i=>S.players.find(p=>p.id===i),tm_=i=>S.teams.find(t=>t.id===i),cnt=(e,p,t)=>e.filter(x=>x.p===p&&x.t===t).length;
+const SPT={fut:{t:["Condicionamento","Velocidade e agilidade","Finalização","Domínio de bola","Partida (individual)"],m:[["fin","Finalizações"],["alvo","Finalizações no alvo"],["gols","Gols"],["ass","Assistências"],["sprint","Tempo no teste de velocidade (s)","min"]]},fsl:{t:["Controle de bola","Agilidade","Velocidade","Finalização","Resistência","Partida (individual)"],m:[["fin","Finalizações"],["alvo","Finalizações no alvo"],["gols","Gols"],["ass","Assistências"],["sprint","Tempo no teste de velocidade (s)","min"]]},vol:{t:["Saque","Recepção","Ataque","Bloqueio","Salto e impulsão","Partida (individual)"],m:[["saq","Saques"],["saqok","Saques certos"],["rec","Recepções"],["recok","Recepções boas"],["ata","Ataques"],["atapt","Ataques que viraram ponto"],["blq","Bloqueios"],["imp","Impulsão vertical (cm)"]]}};
+const DESC={run:"Medido por GPS · ritmo · recordes",fut:"Treinos · finalização · velocidade",fsl:"Controle · agilidade · resistência",vol:"Saque · recepção · ataque · bloqueio"};
+let F=null,G=null,DF="";
+const cn=(s,n)=>String(s==null?"":s).replace(/[<>&"'`]/g,"").trim().slice(0,n);
+const ALL=()=>[...S.runs.map(r=>({...r,sp:"run",min:r.time/60,gps:1})),...S.sess];
+const inD=(d,n)=>Date.now()-new Date(d)<n*864e5,sumS=(a,f)=>a.reduce((s,x)=>s+f(x),0),SS=sp=>S.sess.filter(s=>s.sp===sp).sort((a,b)=>b.date.localeCompare(a.date));
+const wk=(a,f)=>[5,4,3,2,1,0].map(i=>sumS(a.filter(x=>{const g=(Date.now()-new Date(x.date))/864e5;return g>=i*7&&g<(i+1)*7}),f));
+const wbars=v=>{const m=Math.max(...v,1);return`<div class="bars">${v.map(x=>`<div style="height:${x/m*100}%"></div>`).join("")}</div><div class="wl">${v.map(x=>`<span>${Math.round(x*10)/10}</span>`).join("")}</div><div class="mu" style="margin-top:6px">Últimas 6 semanas (a mais recente à direita)</div>`};
+const lab=(sp,k)=>{const d=SPT[sp]&&SPT[sp].m.find(x=>x[0]===k);return d?d[1]:k};
+function recs(sp){const a=SS(sp),rows=SPT[sp].m.map(([k,l,low])=>{const c=a.filter(s=>(s.m||{})[k]!=null);if(!c.length)return"";const b=c.reduce((x,y)=>(low?y.m[k]<x.m[k]:y.m[k]>x.m[k])?y:x);return`<tr><td>${l}</td><td><b class="g">${b.m[k]}</b></td><td class="mu">${new Date(b.date).toLocaleDateString("pt-BR")}</td></tr>`}).join("");return`<div class="card">${rows?`<table>${rows}</table><div class="mu" style="margin-top:6px">Valores informados por você. Nos contadores, vale a melhor sessão.</div>`:'<span class="mu">Registre desempenho nos treinos para ver seus recordes.</span>'}</div>`}
+function rrec(){const r=S.runs,v=r.filter(x=>x.dist>=1),bp=v.length?v.reduce((a,b)=>b.time/b.dist<a.time/a.dist?b:a):null,ld=r.length?r.reduce((a,b)=>b.dist>a.dist?b:a):null,lt=r.length?r.reduce((a,b)=>b.time>a.time?b:a):null,mv=r.length?Math.max(...r.map(x=>x.max)):0;return`<div class="card">${r.length?`<table><tr><td>Maior distância</td><td><b class="g">${ld.dist.toFixed(2)} km</b></td></tr><tr><td>Melhor ritmo (1 km ou mais)</td><td><b class="g">${bp?pace(bp.dist,bp.time)+"/km":"–"}</b></td></tr><tr><td>Maior tempo</td><td><b class="g">${fT(lt.time)}</b></td></tr><tr><td>Velocidade máxima</td><td><b class="g">${mv.toFixed(1)} km/h</b></td></tr></table><div class="mu" style="margin-top:6px">Medido por GPS.</div>`:'<span class="mu">Faça uma corrida com GPS para ver seus recordes.</span>'}</div>`}
+function gprog(g){const d=g.per==="m"?30:7,a=g.sp==="run"?S.runs:S.sess.filter(s=>s.sp===g.sp),r=a.filter(x=>inD(x.date,d)),t=+g.target;let v;if(g.t==="sess")v=r.length;else if(g.t==="min")v=sumS(r,x=>g.sp==="run"?x.time/60:x.min);else if(g.t==="km")v=km(r);else{const df=SPT[g.sp]&&SPT[g.sp].m.find(x=>x[0]===g.k),low=!!(df&&df[2]),vs=a.map(x=>(x.m||{})[g.k]).filter(x=>x!=null);v=vs.length?(low?Math.min(...vs):Math.max(...vs)):0;return{v,t,low,p:vs.length&&t>0?Math.min(1,low?t/v:v/t):0}}return{v,t,p:t>0?Math.min(1,v/t):0}}
+const glab=g=>g.t==="rec"?`${lab(g.sp,g.k)} ${gprog(g).low?"≤":"≥"} ${g.target}`:`${g.t==="sess"?g.target+" treinos":g.t==="min"?g.target+" min de treino":g.target+" km"} por ${g.per==="m"?"mês":"semana"}`;
+const gbar=g=>{const p=gprog(g);return`<div class="card"><div class="th"><b>${SP[g.sp].n}: ${glab(g)}</b><button class="mb" onclick="gdel('${g.id}')">${xc==="g"+g.id?"Confirmar":"✕"}</button></div><div class="mu" style="margin:4px 0 8px">${Math.round(p.v*10)/10} / ${g.target}${p.p>=1?" · ✓ meta alcançada":""}</div><div class="pg"><div style="width:${p.p*100}%"></div></div></div>`};
+function gdel(i){if(xc!=="g"+i){xc="g"+i;return rr()}xc="";S.goals=S.goals.filter(g=>g.id!==i);save();toast("Meta removida");rr()}
+function goals(sp){if(!G||G.sp!==sp)G={sp,t:sp==="run"?"km":"sess",k:"",target:"",per:"w"};if(G.t==="rec"&&!G.k)G.k=SPT[sp].m[0][0];const op=sp==="run"?[["km","Quilômetros"],["sess","Corridas"],["min","Minutos"]]:[["sess","Treinos"],["min","Minutos de treino"],["rec","Marca em exercício"]];
+return S.goals.filter(g=>g.sp===sp).map(gbar).join("")+`<div class="card"><b>Nova meta</b><select onchange="G.t=this.value;G.k='';rr()">${op.map(([v,l])=>`<option value="${v}"${G.t===v?" selected":""}>${l}</option>`).join("")}</select>${G.t==="rec"?`<select onchange="G.k=this.value">${SPT[sp].m.map(([k,l])=>`<option value="${k}"${G.k===k?" selected":""}>${l}</option>`).join("")}</select>`:`<select onchange="G.per=this.value"><option value="w"${G.per==="w"?" selected":""}>Por semana</option><option value="m"${G.per==="m"?" selected":""}>Por mês</option></select>`}<input type="number" step="any" min="0" inputmode="decimal" placeholder="Valor da meta" value="${esc(G.target)}" oninput="G.target=this.value"><button class="btn alt sm" onclick="gadd()">Adicionar meta</button></div>`}
+function gadd(){const t=parseFloat(G.target);if(!(t>0))return toast("Informe um valor maior que zero");S.goals.push({id:uid(),sp:G.sp,t:G.t,k:G.t==="rec"?G.k:"",target:t,per:G.per});save();toast("Meta criada ✓");G=null;rr()}
+const srow=s=>{const ms=Object.entries(s.m||{}).map(([k,v])=>`${lab(s.sp,k)}: ${v}`).join(" · ");return`<div class="card"><span class="tag man">Informado</span> <span class="tag">${SP[s.sp].n}</span><div style="margin-top:6px"><b>${esc(s.type)}</b></div><div class="mu">${new Date(s.date).toLocaleDateString("pt-BR")} · ${s.min} min · intensidade ${s.rpe}/10</div>${ms?`<div class="mu" style="margin-top:4px">${ms}</div>`:""}${s.note?`<div style="margin-top:6px;font-size:14px">${esc(s.note)}</div>`:""}<div class="row" style="margin-top:8px"><button class="btn alt sm" onclick="sedit('${s.id}')">Editar</button><button class="btn alt sm" onclick="sdel('${s.id}')">${xc==="s"+s.id?"Confirmar":"Excluir"}</button></div></div>`};
+const arch=sp=>{const m=S.matches.filter(x=>x.sp===sp);return m.length?`<h2>Partidas anteriores (arquivo)</h2><div class="card"><div class="mu" style="margin-bottom:6px">Dados preservados de versões anteriores. O Arena+ não organiza mais partidas.</div>${m.map(x=>`<div class="mu">${new Date(x.date).toLocaleDateString("pt-BR")} · ${esc(x.a)} ${x.sa} × ${x.sb} ${esc(x.b)}</div>`).join("")}</div>`:""};
+function snew(sp){F={sp,type:SPT[sp].t[0],date:dk(Date.now()),min:"",rpe:5,note:"",m:{}};sub="form";render()}
+function sedit(i){const s=S.sess.find(x=>x.id===i);if(!s)return;F={id:s.id,sp:s.sp,type:s.type,date:dk(s.date),min:s.min,rpe:s.rpe,note:s.note||"",m:{...(s.m||{})}};sub="form";render()}
+function sdel(i){if(xc!=="s"+i){xc="s"+i;return rr()}xc="";S.sess=S.sess.filter(x=>x.id!==i);save();toast("Treino excluído");rr()}
+function fback(){const sp=F&&F.sp;F=null;sub=null;sp?open_(sp):render()}
+function fsave(){const m=+F.min;if(!(m>0&&m<=1440))return toast("Informe a duração em minutos");if(!F.date||!Number.isFinite(new Date(F.date+"T12:00:00").getTime())||F.date>dk(Date.now()))return toast("Informe uma data válida até hoje");const mm={};Object.entries(F.m).forEach(([k,v])=>{const x=parseFloat(v);if(v!==""&&isFinite(x)&&x>=0)mm[k]=x});const o={id:F.id||uid(),sp:F.sp,type:F.type,date:new Date(F.date+"T12:00:00").toISOString(),min:Math.round(m),rpe:F.rpe,note:String(F.note||"").trim().slice(0,300),m:mm},i=S.sess.findIndex(x=>x.id===o.id),sp=F.sp;i<0?S.sess.unshift(o):S.sess[i]=o;save();toast(i<0?"Treino salvo ✓":"Treino atualizado ✓");F=null;open_(sp)}
+function dump(){return JSON.stringify({app:"arena-plus",v:2,at:new Date().toISOString(),data:{name:S.name,goal:S.goal,photo:S.photo||"",runs:S.runs,matches:S.matches,teams:S.teams,players:S.players,sess:S.sess,goals:S.goals,pos:S.pos}})}
+function expo(){
+ const j=dump(),file=new Blob([j],{type:"application/json;charset=utf-8"}),url=URL.createObjectURL(file);
+ const a=document.createElement("a");a.href=url;a.download="arena-plus-backup-"+dk(Date.now())+".json";a.style.display="none";
+ document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),30000);
+ toast("Backup preparado para download ✓");
+}
+
+function chk(t){let o;try{o=JSON.parse(t)}catch(e){throw"Arquivo inválido: não é um JSON."}if(!o||o.app!=="arena-plus"||!o.data)throw"Este arquivo não é um backup do Arena+.";const d=o.data,L=x=>Array.isArray(x)?x:null;if(!L(d.runs)||!L(d.matches)||!L(d.teams)||!L(d.players))throw"Backup incompleto: faltam listas de dados.";
+const n=x=>typeof x==="number"&&isFinite(x),K=["fut","fsl","vol"],rx=new RegExp("^data:image/(jpeg|png|webp);base64,[A-Za-z0-9+/=]+$"),img=s=>typeof s==="string"&&rx.test(s)?s:"",pp=a=>(Array.isArray(a)?a:[]).filter(s=>Array.isArray(s)&&n(s[0])&&n(s[1])).map(s=>[s[0],s[1]]);
+const runs=d.runs.map(r=>{if(!r||!n(r.dist)||!n(r.time)||isNaN(Date.parse(r.date)))throw"Corrida inválida no backup.";return{date:new Date(r.date).toISOString(),dist:r.dist,time:r.time,max:n(r.max)?r.max:0,cal:n(r.cal)?r.cal:0,pts:pp(r.pts).slice(0,500)}});
+const teams=d.teams.map(t=>{if(!t||!K.includes(t.sp)||!cl(t.id)||!cl(t.name))throw"Equipe inválida no backup.";return{id:cl(t.id),sp:t.sp,name:cl(t.name)}});
+const players=d.players.map(p=>{if(!p||!K.includes(p.sp)||!cl(p.id)||!cl(p.name))throw"Jogador inválido no backup.";return{id:cl(p.id),sp:p.sp,team:cl(p.team),name:cl(p.name),num:cl(p.num),pos:cl(p.pos),photo:img(p.photo)}});
+const matches=d.matches.map((m,i)=>{if(!m||!K.includes(m.sp)||!n(m.sa)||!n(m.sb)||isNaN(Date.parse(m.date)))throw"Partida inválida no backup.";return{id:n(m.id)?m.id:Date.now()+i,sp:m.sp,a:cl(m.a)||"Time A",b:cl(m.b)||"Time B",loc:cl(m.loc),sa:m.sa,sb:m.sb,fa:n(m.fa)?m.fa:0,fb:n(m.fb)?m.fb:0,sets:pp(m.sets),ta:cl(m.ta),tb:cl(m.tb),ev:(Array.isArray(m.ev)?m.ev:[]).filter(e=>e&&typeof e.t==="string"&&e.t.length===1&&"gayrpsb".includes(e.t)).map(e=>({p:cl(e.p),t:e.t})),pl:(Array.isArray(m.pl)?m.pl:[]).map(cl),date:new Date(m.date).toISOString()}});
+const sess=(Array.isArray(d.sess)?d.sess:[]).map(s=>{if(!s||!K.includes(s.sp)||!n(s.min)||isNaN(Date.parse(s.date)))throw"Treino inválido no backup.";const m={};Object.entries(s.m&&typeof s.m==="object"?s.m:{}).forEach(([k,v])=>{if(n(v)&&v>=0&&/^[a-z]{2,8}$/.test(k))m[k]=v});return{id:cl(s.id)||uid(),sp:s.sp,type:cn(s.type,40),date:new Date(s.date).toISOString(),min:s.min,rpe:n(s.rpe)?Math.min(10,Math.max(1,s.rpe)):5,note:cn(s.note,300),m}});
+const goals=(Array.isArray(d.goals)?d.goals:[]).map(g=>{if(!g||!["run",...K].includes(g.sp)||!["sess","min","km","rec"].includes(g.t)||!n(g.target)||g.target<=0)throw"Meta inválida no backup.";return{id:cl(g.id)||uid(),sp:g.sp,t:g.t,k:cn(g.k,8),target:g.target,per:g.per==="m"?"m":"w"}});
+const pos={};K.forEach(k=>{pos[k]=cn(d.pos&&d.pos[k],20)});
+return{name:cl(d.name)||"Atleta",goal:n(d.goal)?Math.max(0,d.goal):10,photo:img(d.photo),runs,matches,teams,players,sess,goals,pos}}
+function impo(t){const m=$("#bkm");try{PI=chk(t)}catch(e){PI=null;m.innerHTML=`<div class="err">${typeof e==="string"?e:"Não foi possível ler o backup."}</div>`;return}m.innerHTML=`<div class="card" style="margin-top:10px"><b>Backup válido</b><div class="mu">${PI.runs.length} corridas · ${PI.matches.length} partidas · ${PI.teams.length} equipes · ${PI.players.length} jogadores · ${PI.sess.length} treinos · ${PI.goals.length} metas</div><div class="mu">Isto substituirá os dados atuais (${S.runs.length} corridas, ${S.matches.length} partidas, ${S.teams.length} equipes, ${S.players.length} jogadores).</div><div class="row" style="margin-top:10px"><button class="btn alt sm" onclick="PI=null;$('#bkm').innerHTML=''">Cancelar</button><button class="btn red sm" onclick="okimp()">Substituir</button></div></div>`}
+function okimp(){if(!PI)return;S=Object.assign(S,PI);PI=null;const ok=save();toast(ok?"Backup importado ✓":"Importado na sessão, mas armazenamento cheio. Exporte um backup.");render()}
+function impf(i){const f=i.files[0];if(!f)return;if(f.size>2e7){$("#bkm").innerHTML='<div class="err">Arquivo grande demais.</div>';return}const r=new FileReader();r.onload=()=>impo(r.result);r.readAsText(f);i.value=""}
+async function wl(){if(!R)return;if(!("wakeLock" in navigator)){R.wn="Este navegador não consegue manter a tela acesa. Desative o bloqueio automático de tela e mantenha o app aberto.";return live()}try{const lock=await navigator.wakeLock.request("screen");if(!R||R.st==="idle"){await lock.release();return}R.wk=lock;R.wn="";R.wk.addEventListener("release",()=>{if(R&&R.wk===lock)R.wk=null})}catch(e){R.wn="Não foi possível manter a tela acesa (permissão negada ou economia de bateria). Desative o bloqueio automático e mantenha o app aberto.";R.wk=null}live()}
+document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible"&&R&&R.st!=="idle"&&!R.wk)wl()});
+const AV=()=>S.photo?`<img class="av" src="${S.photo}" alt="">`:`<div class="av">${S.name[0].toUpperCase()}</div>`;
+function toast(t){const e=document.createElement("div");e.className="toast";e.textContent=t;document.body.appendChild(e);setTimeout(()=>e.remove(),2300)}
+function photo(i){const f=i.files[0];if(!f)return;const im=new Image();im.onload=()=>{const c=document.createElement("canvas");c.width=c.height=160;const s=Math.min(im.width,im.height);c.getContext("2d").drawImage(im,(im.width-s)/2,(im.height-s)/2,s,s,0,0,160,160);S.photo=c.toDataURL("image/jpeg",.8);save();render()};im.src=URL.createObjectURL(f)}
+const dk=d=>new Date(d).toLocaleDateString("sv");
+const fT=s=>{s=Math.floor(s);const h=Math.floor(s/3600),m=Math.floor(s%3600/60);return(h?h+":":"")+String(m).padStart(h?2:1,"0")+":"+String(s%60).padStart(2,"0")};
+const pace=(d,t)=>d>0.01?fT(t/d):"--:--";
+const hav=(a,b)=>{const r=Math.PI/180,x=(b[0]-a[0])*r,y=(b[1]-a[1])*r,h=Math.sin(x/2)**2+Math.cos(a[0]*r)*Math.cos(b[0]*r)*Math.sin(y/2)**2;return 12742*Math.asin(Math.sqrt(h))};
+const since=n=>S.runs.filter(r=>Date.now()-new Date(r.date)<n*864e5);
+const km=a=>a.reduce((s,r)=>s+r.dist,0);
+function route(p){if(!p||p.length<2)return'<div class="mu" style="padding:30px;text-align:center">O trajeto aparece aqui quando o GPS receber pontos válidos.</div>';
+const la=p.map(x=>x[0]),lo=p.map(x=>x[1]),k=Math.cos(la[0]*Math.PI/180),a=Math.min(...la),b=Math.max(...la),c=Math.min(...lo),d=Math.max(...lo);
+const w=Math.max((d-c)*k,1e-5),h=Math.max(b-a,1e-5),s=Math.min(280/w,160/h),ox=(300-w*s)/2,oy=(180-h*s)/2;
+const pt=p.map(x=>[(ox+(x[1]-c)*k*s).toFixed(1),(oy+(b-x[0])*s).toFixed(1)]),e=pt[pt.length-1];
+return`<svg viewBox="0 0 300 180"><rect width="300" height="180" rx="14" fill="#0d0d0d"/><polyline points="${pt.map(x=>x.join(",")).join(" ")}" fill="none" stroke="#ff3b50" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/><circle cx="${pt[0][0]}" cy="${pt[0][1]}" r="5" fill="#fff"/><circle cx="${e[0]}" cy="${e[1]}" r="6" fill="#ff3b50" stroke="#fff" stroke-width="2"/></svg>`}
+function paceTrend(){
+ const a=S.runs.filter(r=>r.dist>=.5&&r.time>0).slice(0,8).reverse();
+ if(a.length<2)return '<div class="mu">Registre pelo menos duas corridas de 500 m ou mais para visualizar seu ritmo.</div>';
+ const vals=a.map(r=>r.time/r.dist/60),min=Math.max(0,Math.min(...vals)-.4),max=Math.max(...vals)+.4,range=Math.max(.5,max-min);
+ const pts=vals.map((v,i)=>[15+i*270/(a.length-1),20+(v-min)/range*110]);
+ const poly=pts.map(p=>p.map(x=>x.toFixed(1)).join(",")).join(" ");
+ const avg=vals.reduce((x,y)=>x+y,0)/vals.length;
+ return `<div class="chart-title"><span class="mu">Min/km · últimas ${a.length} corridas</span><span class="g">média ${Math.floor(avg)}:${String(Math.round((avg%1)*60)).padStart(2,"0")}</span></div><svg viewBox="0 0 300 160" role="img" aria-label="Evolução do ritmo das últimas corridas"><path d="M15 30H285M15 75H285M15 120H285" fill="none" stroke="#38313a" stroke-width="1" stroke-dasharray="4 5"/><polyline points="${poly}" fill="none" stroke="#fa4055" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>${pts.map(p=>`<circle cx="${p[0]}" cy="${p[1]}" r="4" fill="#fa4055" stroke="#21151c" stroke-width="2"/>`).join("")}</svg><div class="mu">Menor ritmo (min/km) significa corrida mais rápida. Comparações dependem do percurso e GPS.</div>`;
+}
+const feed=()=>[...S.runs.map(r=>({d:r.date,sp:"run",h:`<span class="tag">🏃 Corrida · GPS</span> <b>${r.dist.toFixed(2)} km</b> em ${fT(r.time)} <span class="mu">· ${pace(r.dist,r.time)}/km</span>`})),...S.sess.map(s=>({d:s.date,sp:s.sp,h:`<span class="tag">${SP[s.sp].i} ${SP[s.sp].n}</span> <b>${esc(s.type)}</b> <span class="mu">· ${s.min} min de treino</span>`}))].sort((a,b)=>b.d.localeCompare(a.d));
+
+function spark(vals){
+ const a=vals.length?vals:[0,0,0,0,0,0,0];
+ if(!a.some(x=>x>0))return `<div class="chart-empty">Nenhuma atividade registrada nesta semana.<br>Seus dados aparecerão aqui após o primeiro treino.</div>`;
+ const mx=Math.max(...a,1),points=a.map((v,i)=>[10+(i*270/Math.max(1,a.length-1)),104-(v/mx)*78]);
+ const line=points.map((p,i)=>(i?'L':'M')+p[0].toFixed(1)+' '+p[1].toFixed(1)).join(' ');
+ return `<div class="spark"><svg viewBox="0 0 290 118" role="img" aria-label="Gráfico das atividades registradas"><path class="spark-grid" d="M10 25H280M10 64H280M10 104H280" fill="none"/><path class="spark-area" d="${line} L280 105 L10 105 Z"/><path class="spark-line" d="${line}"/>${points.map((p,i)=>a[i]>0?`<circle cx="${p[0]}" cy="${p[1]}" r="3.7" fill="#ff465e" stroke="#16151d" stroke-width="2"/>`:"").join("")}</svg></div>`;
+}
+const weekdays=['dom','seg','ter','qua','qui','sex','sáb'];
+const wkstrip=(A)=>[...Array(7)].map((_,i)=>{const d=new Date();d.setHours(12,0,0,0);d.setDate(d.getDate()-6+i);const dstr=dk(d);const active=A.some(x=>dk(x.date)===dstr);return`<div class="day-cell ${i===6?'today':''} ${active?'active':''}"><span>${weekdays[d.getDay()]}</span><b>${d.getDate()}</b>${active?'<i></i>':''}</div>`}).join('');
+const feedcard=x=>`<div class="card activity-row"><span class="feedicon">${IC[x.sp]}</span><div class="activity-info"><div class="activity-title">${SP[x.sp]?.n||'Atividade'}</div><div class="mu">${x.title} · ${new Date(x.d).toLocaleDateString('pt-BR')}</div></div><span class="feed-arrow">›</span></div>`;
+
+const V={
+home(){
+ const hr=new Date().getHours(),g=hr<12?'Bom dia':hr<18?'Boa tarde':'Boa noite',A=ALL(),w=since(7);
+ const d7=A.filter(x=>inD(x.date,7));
+ const days=[...Array(7)].map((_,i)=>{const d=new Date();d.setHours(12,0,0,0);d.setDate(d.getDate()-6+i);const k=dk(d);return sumS(A.filter(x=>dk(x.date)===k),x=>x.min)});
+ const f=feed(),pc=S.goal?Math.min(1,km(w)/S.goal):0,activeDays=new Set(d7.map(x=>dk(x.date))).size;
+ return `<div class="brandbar"><div class="brand-word">ARENA<span>+</span></div><div class="brand-chip">PERFORMANCE</div></div>
+ <div class="hd">${AV()}<div><div class="mu">${g}, pronto para evoluir?</div><h1>${esc(S.name)}</h1></div></div>
+ <div class="card week-panel"><div class="week-header"><div class="overline">Sua semana</div><div class="week-note">Atividades registradas</div></div><div class="week-strip">${wkstrip(A)}</div></div>
+ <div class="feature-summary"><div class="card feature-main"><div class="feature-label">Distância total</div><div class="feature-number">${km(S.runs).toFixed(1)}<small>km</small></div><div class="feature-mini">${S.runs.length} corrida(s) registrada(s) <span>↗</span></div></div>
+ <div class="card"><div class="feature-label">Meta da semana</div><div class="round-progress"><svg viewBox="0 0 90 90"><circle class="r-bg" cx="45" cy="45" r="34"/><circle class="r-front" cx="45" cy="45" r="34" stroke-dasharray="${(pc*214).toFixed(1)} 214"/></svg><b>${Math.round(pc*100)}%</b></div><div class="mu" style="text-align:center;font-size:10px;margin-top:3px">${km(w).toFixed(1)} / ${S.goal} km</div></div></div>
+ <button class="btn" onclick="open_('run')"><span class="bi">${IC.run}</span> Iniciar corrida</button>
+ <div class="section-head"><h2>Seu desempenho</h2><span class="mu">Visão geral</span></div>
+ <div class="grid stat-grid"><div class="card"><div class="stat-card-header"><span class="tiny-mark">${IC.act}</span><span class="mu">Atividades</span></div><div class="big">${A.length}</div></div>
+ <div class="card"><div class="stat-card-header"><span class="tiny-mark">${IC.run}</span><span class="mu">Tempo total</span></div><div class="big g">${(sumS(A,x=>x.min)/60).toFixed(1)}<small> h</small></div></div>
+ <div class="card"><div class="stat-card-header"><span class="tiny-mark">${IC.sports}</span><span class="mu">Dias ativos (7d)</span></div><div class="big">${activeDays}</div></div>
+ <div class="card"><div class="stat-card-header"><span class="tiny-mark">${IC.home}</span><span class="mu">Treinos na semana</span></div><div class="big">${d7.length}</div></div></div>
+ <div class="card chart-card" style="margin-top:11px"><div class="week-header"><div class="overline">Atividade semanal</div><div class="mu">Minutos por dia</div></div>${spark(days)}<div class="wl">${['S','T','Q','Q','S','S','D'].map((x,i)=>`<span>${x}</span>`).join('')}</div></div>
+ <div class="section-head"><h2>Escolha seu esporte</h2><span class="mu">04 modalidades</span></div>
+ <div class="section-sports">${Object.entries(SP).map(([k,v])=>`<div class="card sp sport-tile s-${k}" role="button" tabindex="0" onclick="open_('${k}')" onkeydown="if(event.key==='Enter')open_('${k}')"><span class="si">${IC[k]}</span><div class="sport-bottom"><div><b>${v.n}</b><div class="mu">${k==='run'?'GPS e ritmo':k==='fut'?'Foco e evolução':k==='fsl'?'Agilidade e técnica':'Impulsão e técnica'}</div></div><span class="sport-arrow">↗</span></div></div>`).join('')}</div>
+ ${S.goals.length?`<div class="section-head"><h2>Suas metas</h2></div>${S.goals.slice(0,2).map(gbar).join('')}`:''}
+ <div class="section-head"><h2>Atividades recentes</h2><span class="mu">${A.length} no histórico</span></div>
+ ${f.slice(0,4).map(x=>feedcard({...x,title:x.sp==='run'?S.runs.find(r=>r.date===x.d)?.dist.toFixed(2)+' km':S.sess.find(s=>s.date===x.d&&s.sp===x.sp)?.type||'Treino'})).join('')||'<div class="empty"><b>Seu próximo treino começa aqui</b><span>Registre uma corrida ou treinamento para acompanhar sua evolução.</span></div>'}
+ <div class="card" style="margin-top:17px;background:linear-gradient(140deg,#1c1720,#15151b);border-color:#352837"><div class="overline">Sua evolução não para</div><p class="mu" style="margin:8px 0 14px">Registre seu treino de futebol, futsal ou vôlei em poucos toques.</p><button class="btn alt" onclick="go('act')">Registrar outro esporte <span style="font-size:18px">↗</span></button></div>`
+},
+sports(){return`<div class="page-kicker">MODALIDADES</div><h1>Seu esporte.<br>Seu ritmo.</h1><p class="page-lead">Painéis independentes para acompanhar treinos, evolução e metas de cada modalidade.</p>`+Object.entries(SP).map(([k,v])=>`<div class="card sp big s-${k}" role="button" tabindex="0" onclick="open_('${k}')" onkeydown="if(event.key==='Enter')open_('${k}')"><div class="ico">${IC[k]}</div><div><b>${v.n}</b><div class="mu">${DESC[k]}</div></div><span style="font-size:23px;color:#ff6178">↗</span></div>`).join("")},
+act(){const A=[...S.runs.map(r=>({...r,sp:"run",gps:1})),...S.sess].filter(x=>!DF||x.sp===DF).sort((a,b)=>b.date.localeCompare(a.date));
+return`<h1>Atividade</h1><p class="mu">Registre treinos e consulte seu diário.</p><button class="btn" style="margin-bottom:10px" onclick="open_('run')"><span class="bi">${IC.run}</span>Iniciar corrida com GPS</button>${["fut","fsl","vol"].map(k=>`<button class="btn alt" style="margin-bottom:10px" onclick="snew('${k}')"><span class="bi">${IC[k]}</span>Registrar treino de ${SP[k].n.toLowerCase()}</button>`).join("")}
+<h2>Diário de treinamento</h2><div class="chips">${[["","Tudo"],...Object.entries(SP).map(([k,v])=>[k,v.n])].map(([k,n])=>`<button class="${DF===k?"on":""}" onclick="DF='${k}';rr()">${n}</button>`).join("")}</div>${A.map(x=>x.gps?`<div class="card"><span class="tag">Medido · GPS</span><div style="margin-top:6px"><b>Corrida · ${x.dist.toFixed(2)} km</b></div><div class="mu">${new Date(x.date).toLocaleDateString("pt-BR")} · ${fT(x.time)} · ${pace(x.dist,x.time)}/km</div></div>`:srow(x)).join("")||'<div class="empty"><b>Diário vazio</b><span>Seus treinos aparecem aqui.</span></div>'}`},
+com(){return`<h1>Comunidade</h1><div class="card"><b>Em breve</b><p class="mu">Seguir atletas, compartilhar treinos, curtir, comentar, desafios e rankings de frequência e volume exigem contas e banco de dados online. Ainda não estão implementados.</p></div><h2>Suas atividades</h2>${feed().map(x=>`<div class="card">${x.h}</div>`).join("")||'<div class="empty"><b>Sem atividades</b></div>'}`},
+prof(){const A=ALL(),tot=sumS(A,x=>x.min)/60,fav=Object.keys(SP).filter(k=>A.some(x=>x.sp===k)),gd=S.goals.filter(g=>gprog(g).p>=1).length,dias=new Set(A.filter(x=>inD(x.date,7)).map(x=>dk(x.date))).size,med=[["Primeira atividade",A.length>0],["10 atividades",A.length>=10],["10 horas de treino",tot>=10],["50 km corridos",km(S.runs)>=50],["Meta alcançada",gd>0],["Semana ativa (3 dias)",dias>=3]];
+return`<div class="pcard"><label class="avu">${AV()}<input type="file" accept="image/*" hidden onchange="photo(this)"><i>✎</i></label><h1>${esc(S.name)}</h1><div class="mu">${fav.length?fav.map(k=>SP[k].n+(S.pos[k]?" · "+esc(S.pos[k]):"")).join(" | "):"Suas modalidades aparecem conforme você treina"}</div><div class="grid3"><div><b>${A.length}</b><span>atividades</span></div><div><b>${tot.toFixed(1)}</b><span>horas</span></div><div><b>${dias}</b><span>dias ativos (7d)</span></div></div></div>
+<h2>Medalhas</h2><div class="medals">${med.map(([n,o])=>`<div class="${o?"on":""}"><span>${o?"★":"☆"}</span>${n}</div>`).join("")}</div>
+${fav.map(k=>`<h2>Recordes · ${SP[k].n}</h2>${k==="run"?rrec():recs(k)}`).join("")}
+<h2>Histórico</h2>${feed().slice(0,5).map(x=>`<div class="card">${x.h}</div>`).join("")||'<div class="empty"><b>Sem histórico ainda</b></div>'}
+${S.matches.length?`<h2>Arquivo histórico</h2><details class="card"><summary>${S.matches.length} partida(s) de versões anteriores</summary><p class="mu">Seus registros antigos foram preservados apenas para consulta e backup. O Arena+ agora é voltado ao acompanhamento do atleta.</p>${S.matches.slice(0,15).map(m=>`<div class="mu" style="padding:5px 0">${esc(SP[m.sp]?.n||"Esporte")} · ${new Date(m.date).toLocaleDateString("pt-BR")}</div>`).join("")}</details>`:""}<h2>Backup e dados</h2><div class="card"><p class="mu" style="margin-top:0">Seus dados são salvos neste navegador. Exporte regularmente um backup para evitar perdas e transferir seus treinos para outro aparelho. O arquivo inclui seu histórico de localização GPS.</p><button class="btn" onclick="expo()">Exportar backup (.json)</button><label class="btn alt" style="margin-top:8px;cursor:pointer">Importar de arquivo<input type="file" accept=".json,application/json" hidden onchange="impf(this)"></label><textarea id="bk" rows="3" placeholder="Ou cole aqui o conteúdo de um backup"></textarea><button class="btn alt sm" onclick="impo($('#bk').value)">Validar texto colado</button><div id="bkm"></div></div>
+<h2>Configurações</h2><div class="card"><label class="mu">Nome</label><input value="${esc(S.name)}" oninput="S.name=this.value||'Atleta';save()"><label class="mu">Meta semanal de corrida (km)</label><input type="number" value="${S.goal}" oninput="S.goal=+this.value||0;save()">${["fut","fsl","vol"].map(k=>`<label class="mu">Posição · ${SP[k].n} (opcional)</label><select onchange="S.pos['${k}']=this.value;save()"><option value="">—</option>${POS[k].map(x=>`<option${S.pos[k]===x?" selected":""}>${x}</option>`).join("")}</select>`).join("")}</div>
+<div class="card"><b>Medido × informado</b><p class="mu">Medido: somente o percurso, a distância e a velocidade das corridas, captados pelo GPS. Informado: todo o resto (treinos, gols, ataques, bloqueios, impulsão), digitado por você. Nada é simulado.</p></div>
+<div class="card"><b>Privacidade</b><p class="mu">Os dados ficam armazenados apenas neste navegador, sem servidor. A localização só é acessada durante uma corrida, com sua permissão. Evite compartilhar arquivos de backup: eles podem conter seus percursos GPS.</p></div>
+<div class="card"><b>Status do projeto</b><p class="mu">✅ Treinos, diário, metas e recordes por modalidade<br>✅ Corrida com GPS (quando o navegador permite)<br>✅ Backup exportável e importável<br>⏳ Login e banco online<br>⏳ Comunidade, desafios e rankings<br>⏳ GPS em segundo plano (exige app nativo)</p></div>
+<button class="btn red" onclick="if(this.dataset.c){S.runs=[];S.matches=[];S.teams=[];S.players=[];S.sess=[];S.goals=[];save();go('home')}else{this.dataset.c=1;this.textContent='Toque de novo para apagar tudo'}">Apagar meus dados</button>`},
+sp(sp){const a=SS(sp),w=a.filter(x=>inD(x.date,7));
+return`<button class="back" onclick="back()">‹ Voltar</button><div class="ph s-${sp}"><span class="si">${IC[sp]}</span><div><h1>${SP[sp].n}</h1><div class="mu">${DESC[sp]}</div></div></div><button class="btn" onclick="snew('${sp}')">+ Registrar treino</button>
+<div class="grid" style="margin-top:12px"><div class="card"><div class="mu">Treinos (7 dias)</div><div class="big">${w.length}</div></div><div class="card"><div class="mu">Minutos (7 dias)</div><div class="big g">${sumS(w,x=>x.min)}</div></div><div class="card"><div class="mu">Tempo total</div><div class="big">${(sumS(a,x=>x.min)/60).toFixed(1)}<small> h</small></div></div><div class="card"><div class="mu">Intensidade média</div><div class="big">${a.length?(sumS(a,x=>x.rpe)/a.length).toFixed(1):"–"}</div></div></div>
+<h2>Minutos por semana</h2><div class="card">${wbars(wk(a,x=>x.min))}</div><h2>Recordes pessoais</h2>${recs(sp)}<h2>Metas</h2>${goals(sp)}<h2>Histórico</h2>${a.map(srow).join("")||'<div class="empty"><b>Nenhum treino</b><span>Registre seu primeiro treino de '+SP[sp].n.toLowerCase()+'.</span></div>'}`},
+form(){const c=SPT[F.sp];return`<button class="back" onclick="fback()">‹ Voltar</button><div class="ph s-${F.sp}"><span class="si">${IC[F.sp]}</span><div><h1>${F.id?"Editar treino":"Registrar treino"}</h1><div class="mu">${SP[F.sp].n} · dados informados por você</div></div></div>
+<div class="card"><label class="mu">Tipo de treino</label><select onchange="F.type=this.value">${c.t.map(x=>`<option${F.type===x?" selected":""}>${x}</option>`).join("")}</select><div class="row"><div><label class="mu">Data</label><input type="date" value="${F.date}" max="${dk(Date.now())}" onchange="F.date=this.value"></div><div><label class="mu">Duração (min)</label><input type="number" min="1" inputmode="numeric" value="${F.min}" oninput="F.min=this.value"></div></div>
+<label class="mu">Intensidade percebida: <b id="rv">${F.rpe}</b>/10</label><input type="range" min="1" max="10" value="${F.rpe}" oninput="F.rpe=+this.value;$('#rv').textContent=this.value" style="padding:0">
+<h2 style="margin-top:8px">Desempenho (opcional)</h2><div class="grid">${c.m.map(([k,l])=>`<div><label class="mu">${l}</label><input type="number" step="any" min="0" inputmode="decimal" value="${F.m[k]??""}" oninput="F.m['${k}']=this.value"></div>`).join("")}</div>
+<label class="form-group-label" for="training-notes">Observações</label><textarea id="training-notes" rows="3" maxlength="300" placeholder="Como foi o treino? Registre sensações e aprendizados..." oninput="F.note=this.value">${esc(F.note)}</textarea><button class="btn" onclick="fsave()">${F.id?"Salvar alterações":"Salvar treino"}</button></div>`},
+run(){return`<button class="back" onclick="back()">‹ Voltar</button><div class="page-kicker">MODO PERFORMANCE</div><div class="ph s-run"><span class="si">${IC.run}</span><div><h1>Corrida</h1><div class="mu">Medido por GPS · ritmo · recordes</div></div></div>
+<div class="card"><div class="mu">Meta semanal: ${km(since(7)).toFixed(1)} / ${S.goal} km</div><div class="pg" style="margin-top:8px"><div style="width:${Math.min(100,S.goal?km(since(7))/S.goal*100:0)}%"></div></div></div>
+<div id="ctl"></div><div id="live"></div>
+<h2>Recordes</h2>${rrec()}<h2>Evolução</h2><div class="card"><div class="mu" style="margin-bottom:8px">Km por semana</div>${wbars(wk(S.runs,x=>x.dist))}</div><div class="grid"><div class="card"><div class="mu">7 dias</div><div class="big">${km(since(7)).toFixed(1)} km</div></div><div class="card"><div class="mu">30 dias</div><div class="big">${km(since(30)).toFixed(1)} km</div></div></div>
+<h2>Evolução do ritmo</h2><div class="card">${paceTrend()}</div><h2>Metas</h2>${goals("run")}<h2>Histórico</h2>${S.runs.map((r,i)=>{const p=S.runs[i+1],dl=p&&p.dist>0.05?(r.time/r.dist-p.time/p.dist):null;return`<div class="card">${route(r.pts)}<div class="row" style="margin-top:8px"><div><b>${r.dist.toFixed(2)} km</b><div class="mu">${new Date(r.date).toLocaleDateString("pt-BR")}</div></div><div><b>${fT(r.time)}</b><div class="mu">${pace(r.dist,r.time)}/km</div></div><div><b>${r.cal} kcal</b><div class="mu">máx ${r.max.toFixed(1)} km/h</div></div></div>${dl!==null?`<div class="mu" style="margin-top:6px">vs. anterior: <span class="${dl<0?"g":""}">${dl<0?"▲ ":"▼ "}${Math.abs(Math.round(dl))} s/km ${dl<0?"mais rápido":"mais lento"}</span></div>`:""}</div>`}).join("")||'<div class="empty"><b>Nenhuma corrida</b><span>Sua primeira corrida aparece aqui.</span></div>'}
+<div class="card mu">Desafios de corrida: ainda não implementado.</div>`},
+};
+function elapsed(r){return Math.floor(((r.accumMs||0)+(r.st==="run"?Math.max(0,Date.now()-r.startedAt):0))/1000)}
+function live(){
+ const r=R;if(!r||!$("#live"))return;
+ if(r.st!=="idle")r.el=elapsed(r);
+ const el=r.el,v=el>0?r.dist/(el/3600):0,cal=Math.round(r.dist*70);
+ const state=r.st==="idle"?"Pronto para iniciar":r.st==="pause"?"Atividade pausada":r.pts.length?"GPS ativo · precisão aprox. "+(r.accuracy||"?")+" m":"Procurando sinal GPS";
+ $("#live").innerHTML=`<div class="card"><div class="gps-state ${r.pts.length?"good":""}"><span class="gps-dot"></span>${state}</div><div class="race-head">Tempo de corrida</div><div class="race-time">${fT(el)}</div><div class="race-metrics"><div class="race-metric"><div class="mu">Distância</div><b>${r.dist.toFixed(2)}</b><small>km</small></div><div class="race-metric"><div class="mu">Ritmo médio</div><b>${pace(r.dist,el)}</b><small>min/km</small></div><div class="race-metric"><div class="mu">Calorias</div><b>${cal}</b><small>kcal*</small></div></div><div class="route-frame">${route(r.pts)}</div><div class="race-footer"><div><div class="mu">Velocidade média</div><b>${v.toFixed(1)} km/h</b></div><div><div class="mu">Velocidade máxima</div><b>${r.max.toFixed(1)} km/h</b></div></div>${r.err?`<div class="err">${esc(r.err)}</div>`:""}${r.wn?`<div class="warn">${esc(r.wn)}</div>`:""}${r.wk?'<div class="mu" style="margin-top:8px;font-size:11px">✓ Tela mantida acesa com o app visível.</div>':""}<div class="privacy-note" style="margin-top:10px">* Calorias estimadas para 70 kg. O GPS na versão web pode parar se a tela for bloqueada.</div></div>`;
+ $("#ctl").innerHTML=r.st==="idle"?`<button class="btn" onclick="rs()">▶ Iniciar corrida</button>`:`<div class="row"><button class="btn alt" onclick="rp()">${r.st==="run"?"⏸ Pausar":"▶ Continuar"}</button><button class="btn red" onclick="rf()">⏹ Finalizar</button></div>`;
+}
+function rs(){
+ if(!R||R.st!=="idle")return;
+ if(!navigator.geolocation){R.err="Este aparelho não oferece geolocalização.";return live()}
+ if(!window.isSecureContext){R.err="GPS requer HTTPS ou localhost. Publique o aplicativo em um endereço seguro.";return live()}
+ R.st="run";R.err="";R.pts=[];R.dist=0;R.max=0;R.el=0;R.skip=false;R.startedAt=Date.now();R.accumMs=0;
+ wl();
+ try{
+ R.wid=navigator.geolocation.watchPosition(p=>{
+  if(!R||R.st!=="run")return;
+  const c=p.coords;
+  if(!Number.isFinite(c.accuracy)||c.accuracy>35){R.err="Sinal GPS impreciso; procure céu aberto para registrar o percurso.";live();return}
+  R.err="";R.accuracy=Math.round(c.accuracy);
+  const q=[c.latitude,c.longitude,p.timestamp],l=R.pts[R.pts.length-1];
+  if(l&&!R.skip){
+   const d=hav(l,q),dt=(q[2]-l[2])/1000;
+   if(dt<=0)return;
+   if(d<0.006)return; // menos de 6 m pode ser apenas oscilação de GPS
+   if(dt>120){R.skip=true;} // novo trecho depois de longo intervalo
+   else{
+    const speed=d/dt*3600;
+    if(speed>34)return; // elimina saltos impossíveis de GPS
+    R.dist+=d;R.max=Math.max(R.max,speed);
+   }
+  }
+  R.skip=false;R.pts.push(q);live();
+ },e=>{
+  if(!R)return;
+  R.err=e.code===1?"Permissão de localização negada. Libere o acesso nas configurações do navegador.":"Aguardando GPS. Vá para um local aberto e confirme a localização do aparelho.";
+  live();
+ },{enableHighAccuracy:true,maximumAge:0,timeout:20000});
+ }catch(e){R.err="Não foi possível iniciar o GPS neste navegador.";R.st="idle";try{R.wk&&R.wk.release()}catch(_){};live();return}
+ if(tm)clearInterval(tm);
+ tm=setInterval(()=>{if(R&&R.st==="run")live()},1000);live();
+}
+function rp(){
+ if(!R||R.st==="idle")return;
+ if(R.st==="run"){R.accumMs+=Math.max(0,Date.now()-R.startedAt);R.st="pause"}
+ else{R.startedAt=Date.now();R.st="run";R.skip=true}
+ R.el=elapsed(R);live();
+}
+function rf(){
+ if(!R||R.st==="idle")return;
+ if(R.st==="run")R.accumMs+=Math.max(0,Date.now()-R.startedAt);
+ R.st="pause";R.el=elapsed(R);
+ if(R.wid!=null)navigator.geolocation.clearWatch(R.wid);
+ clearInterval(tm);tm=null;
+ try{R.wk&&R.wk.release()}catch(e){}
+ if(R.dist>=.01){
+  const k=Math.max(1,Math.ceil(R.pts.length/200));
+  const pts=R.pts.filter((_,i)=>i%k===0).map(p=>[+p[0].toFixed(5),+p[1].toFixed(5)]);
+  if(R.pts.length>1){const p=R.pts[R.pts.length-1];if(pts.length&&pts[pts.length-1][0]!==+p[0].toFixed(5))pts.push([+p[0].toFixed(5),+p[1].toFixed(5)])}
+  S.runs.unshift({date:new Date().toISOString(),dist:R.dist,time:R.el,max:R.max,cal:Math.round(R.dist*70),pts});
+  const ok=save();toast(ok?"Corrida salva ✓":"Corrida em memória. Exporte backup antes de sair.");
+ } else toast("Corrida encerrada: distância insuficiente para salvar.");
+ R=null;open_("run");
+}
+
+function open_(k){if(R&&R.st!=="idle"&&k!=="run"){toast("Finalize a corrida para sair.");return}sub=k;if(k==="run"&&!R)R={st:"idle",pts:[],dist:0,el:0,max:0,err:""};render()}
+function back(){if(R&&R.st!=="idle"){toast("Finalize a corrida para sair.");return}sub=null;render()}
+function go(t){if(R&&R.st!=="idle"){toast("Finalize a corrida antes de mudar de aba.");return}tab=t;sub=null;render()}
+function render(){const mn=$("#main");mn.style.animation="none";void mn.offsetWidth;mn.style.animation="";mn.innerHTML=sub?(sub==="run"?V.run():sub==="form"?V.form():V.sp(sub)):V[tab]();if(sub==="run")live();
+$("#nav").innerHTML=[["home","Início"],["sports","Esportes"],["act","Atividade"],["com","Comunidade"],["prof","Perfil"]].map(([k,n])=>`<button class="${tab===k?"on":""}" onclick="go('${k}')"><span>${IC[k]}</span>${n}</button>`).join("");window.scrollTo(0,0)}
+window.addEventListener("beforeunload",e=>{if(R&&R.st!=="idle"){e.preventDefault();e.returnValue=""}});
+render();
+</script></body></html>
