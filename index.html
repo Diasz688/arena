@@ -652,6 +652,7 @@ render();
 <style>.endurance-choice{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:20px 0}.endurance-choice button{white-space:normal;text-align:left;min-height:132px;padding:18px;display:flex;flex-direction:column;align-items:flex-start;justify-content:space-between}.endurance-choice svg{width:32px;height:32px}.endurance-choice small{font-weight:400;color:#d5c9d1}.endurance-choice .alt{border-color:#575368}.endurance-number{font-size:40px;font-weight:800;letter-spacing:-1px}.training-filter{display:flex;gap:8px;margin:16px 0}.training-filter button{flex:1}.endurance-record{display:flex;justify-content:space-between;align-items:center;gap:14px}.endurance-record svg{width:26px;height:26px;color:#ff5365}.endurance-record small{display:block;color:var(--mu);margin-top:5px}</style>
 <script>
 // Corrida e ciclismo compartilham o gravador GPS, mas preservam a modalidade em cada registro.
+IC.run=sv('<circle cx="14" cy="4" r="2"/><path d="M7 8l4-2 4 5 4 1M11 7l-2 6 5 3-2 5M9 13l-3 5H2"/>');
 IC.bike=sv('<circle cx="5.5" cy="16" r="4"/><circle cx="18.5" cy="16" r="4"/><path d="M5.5 16l5-9 5 9h-10l4-6h7M9 7H6m9-3h3l2 7"/>');
 let enduranceMode='run',enduranceFilter='all';
 const enduranceSport=r=>r.sport==='bike'?'bike':'run';
@@ -662,7 +663,7 @@ function enduranceStart(k){if(R&&R.st!=='idle'){toast('Finalize o treino atual p
 const enduranceOriginalOpen=open_;
 open_=function(k){if(k==='bike'){enduranceStart('bike');return}if(k==='run'&&(!R||R.st==='idle'))enduranceMode='run';enduranceOriginalOpen(k);if(k==='run'&&R&&R.st==='idle'){R.sport=enduranceMode;live()}};
 function enduranceRows(a){return a.map(r=>`<div class="card endurance-record"><span>${IC[enduranceSport(r)]}</span><div style="flex:1"><b>${enduranceName(enduranceSport(r))} · ${r.dist.toFixed(2)} km</b><small>${new Date(r.date).toLocaleDateString('pt-BR')} · ${fT(r.time)}</small></div><div><b>${enduranceSport(r)==='bike'?enduranceSpeed(r):pace(r.dist,r.time)}</b><small>${enduranceSport(r)==='bike'?'km/h':'min/km'}</small></div></div>`).join('')||'<div class="empty"><b>Seu primeiro treino começa aqui</b><span>Escolha corrida ou ciclismo para gravar com GPS.</span></div>'}
-function enduranceChoices(){return `<div class="endurance-choice"><button class="btn" onclick="enduranceStart('run')">${IC.run}<b>Corrida</b><small>Ritmo · distância · maratona</small></button><button class="btn alt" onclick="enduranceStart('bike')">${IC.bike}<b>Ciclismo</b><small>Velocidade · distância · percurso</small></button></div>`}
+function enduranceChoices(){return `<div class="endurance-choice"><button class="btn" onclick="enduranceStart('run')">${IC.run}<b>Corrida</b><small>Ritmo e distância</small></button><button class="btn alt" onclick="enduranceStart('bike')">${IC.bike}<b>Ciclismo</b><small>Velocidade e percurso</small></button></div>`}
 V.home=function(){const a=S.runs,w=a.filter(r=>inD(r.date,7));return `<div class="brandbar"><div class="brand-word">ARENA<span>+</span></div><div class="brand-chip">CORRA · PEDALE</div></div><div class="hd">${AV()}<div><div class="mu">Seu próximo quilômetro começa aqui.</div><h1>${esc(S.name)}</h1></div></div>${enduranceChoices()}<div class="card"><div class="overline">Sua semana</div><div class="week-strip">${wkstrip(a)}</div><div class="grid3"><div><b>${km(w).toFixed(1)}</b><span> km</span></div><div><b>${w.length}</b><span> treinos</span></div><div><b>${(w.reduce((t,r)=>t+r.time,0)/3600).toFixed(1)}</b><span> horas</span></div></div></div><div class="grid">${['run','bike'].map(k=>`<div class="card"><div class="mu">${enduranceName(k)} · total</div><div class="endurance-number">${km(enduranceRuns(k)).toFixed(1)}</div><span class="mu">km · ${enduranceRuns(k).length} treinos</span></div>`).join('')}</div><h2>Seu objetivo de corrida</h2>${enduranceGoalCard()}<h2>Últimos treinos</h2>${enduranceRows(a.slice(0,4))}`};
 V.sports=function(){return `<div class="page-kicker">DUAS MODALIDADES. UM OBJETIVO.</div><h1>Vá mais longe.</h1><p class="mu">Corrida e ciclismo com percurso GPS, tempo e evolução separados.</p>${enduranceChoices()}<div class="card"><b>Corrida e maratona</b><p class="mu">Acompanhe o ritmo em min/km e escolha sua distância de prova.</p></div><div class="card"><b>Ciclismo</b><p class="mu">Acompanhe velocidade em km/h, tempo e distância dos seus pedais.</p></div>`};
 V.act=function(){const a=S.runs.filter(r=>enduranceFilter==='all'||enduranceSport(r)===enduranceFilter);return `<h1>Seus treinos</h1>${enduranceChoices()}<div class="training-filter">${[['all','Todos'],['run','Corrida'],['bike','Ciclismo']].map(([k,n])=>`<button class="btn ${enduranceFilter===k?'':'alt'} sm" onclick="enduranceFilter='${k}';render()">${n}</button>`).join('')}</div>${enduranceRows(a)}`};
@@ -687,4 +688,14 @@ render=function(){enduranceRender();const buttons=document.querySelectorAll('#na
 render();
 </script>
 
+<style>
+.endurance-choice{align-items:stretch;gap:12px}
+.endurance-choice button{display:grid;grid-template-rows:32px 24px minmax(34px,auto);align-content:start;justify-content:stretch;gap:12px;min-width:0;min-height:158px;margin:0!important;padding:18px!important;line-height:1.4;border-radius:18px}
+.endurance-choice button b{font-size:17px;line-height:24px;align-self:start}
+.endurance-choice button small{display:block;min-width:0;font-size:12px;line-height:17px;font-weight:400;letter-spacing:0;overflow-wrap:normal}
+.endurance-choice button svg{display:block;width:30px;height:30px;align-self:start}
+.training-filter{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.training-filter button{min-width:0;margin:0!important;padding:12px 6px!important;min-height:48px;font-size:13px}
+@media(max-width:360px){.endurance-choice{gap:8px}.endurance-choice button{padding:14px!important}.endurance-choice button b{font-size:16px}}
+</style>
 </body></html>
