@@ -235,7 +235,7 @@ input[type=range]{accent-color:#ff4359}
 .empty{background:#13141b;border-color:#38303b}
 @media(max-width:365px){#app{padding-left:12px;padding-right:12px}.card{padding:13px}.feature-number{font-size:29px}.race-metric b{font-size:15px}.day-cell b{font-size:12px}.day-cell span{font-size:9px}.section-sports .sport-tile{padding:13px}.btn{font-size:14px}}
 @media(min-width:540px){#app{padding-top:27px}}
-</style></head><body>
+</style><link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""><script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script></head><body>
 <div id="splash"><div class="splash-inner"><div class="splash-emblem">A<span>+</span></div><div class="logo">ARENA<span>+</span></div><div class="splash-tag">SEU ESPORTE. SUA EVOLUÇÃO.</div></div></div><div id="app"><div id="main"></div></div>
 <nav id="nav"></nav>
 <script>
@@ -412,8 +412,8 @@ function rs(){
  R.wid=navigator.geolocation.watchPosition(p=>{
   if(!R||R.st!=="run")return;
   const c=p.coords;
-  if(!Number.isFinite(c.accuracy)||c.accuracy>35){R.err="Sinal GPS impreciso; procure céu aberto para registrar o percurso.";live();return}
-  R.err="";R.accuracy=Math.round(c.accuracy);
+  if(!Number.isFinite(c.accuracy)||c.accuracy>35){R.accuracy=Math.round(c.accuracy);R.err="Sinal GPS impreciso; procure céu aberto para registrar o percurso.";live();return}
+  R.err="";R.lastFix=Date.now();R.accuracy=Math.round(c.accuracy);
   const q=[c.latitude,c.longitude,p.timestamp],l=R.pts[R.pts.length-1];
   if(l&&!R.skip){
    const d=hav(l,q),dt=(q[2]-l[2])/1000;
@@ -466,4 +466,51 @@ function render(){const mn=$("#main");mn.style.animation="none";void mn.offsetWi
 $("#nav").innerHTML=[["home","Início"],["sports","Esportes"],["act","Atividade"],["com","Comunidade"],["prof","Perfil"]].map(([k,n])=>`<button class="${tab===k?"on":""}" onclick="go('${k}')"><span>${IC[k]}</span>${n}</button>`).join("");window.scrollTo(0,0)}
 window.addEventListener("beforeunload",e=>{if(R&&R.st!=="idle"){e.preventDefault();e.returnValue=""}});
 render();
-</script></body></html>
+</script>
+<style>
+.arena-map{height:280px;width:100%;border-radius:17px;z-index:0;background:#202029}.map-caption{font-size:11px;color:#aaa;line-height:1.5;margin:8px 0}.gps-help{padding:12px;border:1px solid #493344;border-radius:14px;margin:12px 0;font-size:13px;line-height:1.5}.summary-overlay{position:fixed;inset:0;background:#08080cec;z-index:150;overflow:auto;padding:24px 16px}.summary-sheet{max-width:460px;margin:0 auto;background:linear-gradient(145deg,#30121e,#14141c 55%);border:1px solid #683040;border-radius:24px;padding:24px}.summary-sheet h1{margin:12px 0}.summary-sheet .grid{margin:20px 0}.summary-sheet .card{margin:0}.summary-sheet small{font-size:13px}.summary-actions{display:grid;gap:10px;margin-top:20px}.leaflet-container{font-family:inherit}.leaflet-control-attribution a{color:#005c86}
+</style>
+<script>
+// Arena+ corrida: mapa persistente, qualidade de sinal e resumo privado.
+let arenaMap=null, arenaMapNode=null, arenaLine=null, arenaMarker=null, arenaAccuracy=null, arenaFollow=true;
+const arenaOldLive=live;
+live=function(){
+ if(arenaMapNode&&arenaMapNode.isConnected)arenaMapNode.remove();
+ arenaOldLive();
+ if(!R||!document.querySelector('#live'))return;
+ const host=document.querySelector('#live .route-frame');
+ if(host){
+  if(window.L){
+   if(!arenaMapNode){arenaMapNode=document.createElement('div');arenaMapNode.className='arena-map';arenaMapNode.setAttribute('aria-label','Mapa do percurso da corrida');}
+   host.replaceChildren(arenaMapNode);
+   if(!arenaMap){arenaMap=L.map(arenaMapNode).setView([-14.2,-51.9],3);L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'}).addTo(arenaMap).on('tileerror',()=>{const note=document.querySelector('#map-status');if(note)note.textContent='Mapa indisponível. O GPS continua registrando; confira sua conexão.'});arenaLine=L.polyline([],{color:'#f52238',weight:5}).addTo(arenaMap);arenaMap.on('dragstart',()=>arenaFollow=false);}
+   const pts=R.pts.map(p=>p.slice(0,2));arenaLine.setLatLngs(pts);
+   if(pts.length){const last=pts[pts.length-1];if(!arenaMarker){arenaMarker=L.circleMarker(last,{radius:7,color:'#fff',weight:3,fillColor:'#f52238',fillOpacity:1}).addTo(arenaMap);arenaAccuracy=L.circle(last,{radius:R.accuracy||0,color:'#f52238',weight:1,fillOpacity:.08}).addTo(arenaMap);}arenaMarker.setLatLng(last);arenaAccuracy.setLatLng(last).setRadius(R.accuracy||0);if(arenaFollow)arenaMap.setView(last,Math.max(arenaMap.getZoom(),16),{animate:false});}
+   else{if(arenaMarker){arenaMap.removeLayer(arenaMarker);arenaMarker=null;arenaMap.removeLayer(arenaAccuracy);arenaAccuracy=null;}arenaMap.setView([-14.2,-51.9],3);}
+   arenaMap.invalidateSize({pan:false});
+   host.insertAdjacentHTML('afterend','<p class="map-caption" id="map-status">Mapa de ruas requer internet. O trajeto usa os pontos aceitos pelo GPS.</p><button class="btn alt sm" onclick="arenaFollow=true;live()">Centralizar percurso</button>');
+  }else host.insertAdjacentHTML('afterend','<p class="map-caption">Não foi possível carregar o mapa de ruas. O desenho do trajeto continua disponível.</p>');
+ }
+ const state=document.querySelector('#live .gps-state');
+ if(state){const stale=R.lastFix&&Date.now()-R.lastFix>20000;const text=R.st==='idle'?'GPS em espera':R.st==='pause'?'Corrida pausada':R.err?'Sinal GPS indisponível ou impreciso':stale?'Sinal GPS desatualizado':R.pts.length?'GPS pronto · precisão aproximada de '+R.accuracy+' m':'Buscando sinal GPS…';state.classList.toggle('good',R.st==='run'&&!R.err&&!stale&&R.pts.length>0);state.lastChild.textContent=text;state.setAttribute('role','status');}
+ if(R.st==='idle')document.querySelector('#ctl').insertAdjacentHTML('beforeend','<div class="gps-help">Ao iniciar, permita a localização e aguarde o indicador <b>GPS pronto</b>. Procure um local aberto e mantenha a tela ligada.<br><span class="mu">O mapa solicita imagens de ruas ao OpenStreetMap; seus treinos continuam salvos neste navegador.</span></div>');
+};
+const arenaOldRun=V.run;
+V.run=function(){return arenaOldRun()+(S.runs.length?'<button class="btn alt" onclick="arenaSummary()">Ver resumo da última corrida</button>':'');};
+const arenaOldFinish=rf;
+rf=function(){const previous=S.runs.length;arenaOldFinish();if(S.runs.length>previous)arenaSummary();};
+function arenaSummary(){
+ const r=S.runs[0];if(!r)return;document.querySelector('#arena-summary')?.remove();
+ const old=S.runs.slice(1).find(x=>x.dist>=.5&&x.time>0), delta=old&&r.dist>=.5?(r.time/r.dist-old.time/old.dist):null;
+ const box=document.createElement('div');box.id='arena-summary';box.className='summary-overlay';box.setAttribute('role','dialog');box.setAttribute('aria-modal','true');box.setAttribute('aria-label','Resumo da corrida');
+ box.innerHTML=`<div class="summary-sheet"><div class="brand-word">ARENA<span>+</span></div><div class="page-kicker">CADA PASSO CONTA</div><h1>Sua corrida.<br>Sua conquista.</h1><p class="mu">${new Date(r.date).toLocaleString('pt-BR')}</p><div class="grid"><div class="card"><div class="mu">Distância</div><div class="big g">${r.dist.toFixed(2)}<small> km</small></div></div><div class="card"><div class="mu">Tempo ativo</div><div class="big">${fT(r.time)}</div></div><div class="card"><div class="mu">Ritmo médio</div><div class="big">${pace(r.dist,r.time)}</div><small>min/km</small></div><div class="card"><div class="mu">Velocidade média</div><div class="big">${(r.time?r.dist*3600/r.time:0).toFixed(1)}<small> km/h</small></div></div></div>${route(r.pts)}${delta!==null?`<p class="mu">Comparação com a corrida anterior: ${Math.abs(Math.round(delta))} s/km ${delta<0?'mais rápido':'mais lento'}. Percursos e condições podem ser diferentes.</p>`:''}<p class="privacy-note">O compartilhamento envia somente distância, tempo e ritmo. Seu percurso e sua localização não são incluídos.</p><div class="summary-actions"><button class="btn" id="arena-share" onclick="arenaShare()">Compartilhar resultado</button><button class="btn alt" onclick="arenaDownload()">Baixar resumo em texto</button><button class="btn alt" id="arena-close" onclick="arenaClose()">Voltar ao Arena</button></div><div id="arena-share-message" role="status" class="mu" style="margin-top:12px"></div></div>`;
+ document.body.append(box);box.querySelector('#arena-close').focus();
+ box.addEventListener('keydown',e=>{if(e.key==='Escape')arenaClose();if(e.key==='Tab'){const buttons=[...box.querySelectorAll('button')];if(e.shiftKey&&document.activeElement===buttons[0]){e.preventDefault();buttons.at(-1).focus()}else if(!e.shiftKey&&document.activeElement===buttons.at(-1)){e.preventDefault();buttons[0].focus()}}});
+}
+function arenaClose(){document.querySelector('#arena-summary')?.remove();document.querySelector('#nav button.on')?.focus()}
+function arenaResultText(){const r=S.runs[0];return `ARENA+ • Minha corrida\n${new Date(r.date).toLocaleDateString('pt-BR')}\nDistância: ${r.dist.toFixed(2)} km\nTempo: ${fT(r.time)}\nRitmo médio: ${pace(r.dist,r.time)} min/km`;}
+async function arenaShare(){const text=arenaResultText(),message=document.querySelector('#arena-share-message');try{if(navigator.share){await navigator.share({title:'Minha corrida no Arena+',text});message.textContent='Resultado compartilhado.'}else if(navigator.clipboard&&window.isSecureContext){await navigator.clipboard.writeText(text);message.textContent='Resultado copiado! Cole na conversa que desejar.'}else{arenaDownload();message.textContent='Resumo baixado para compartilhar.'}}catch(e){message.textContent=e.name==='AbortError'?'Compartilhamento cancelado.':'Não foi possível compartilhar. Use Baixar resumo em texto.'}}
+function arenaDownload(){const url=URL.createObjectURL(new Blob([arenaResultText()],{type:'text/plain;charset=utf-8'})),a=document.createElement('a');a.href=url;a.download='arena-resumo-corrida.txt';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)}
+render();
+</script>
+</body></html>
